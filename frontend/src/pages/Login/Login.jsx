@@ -3,6 +3,7 @@ import { Card, Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { motion } from "framer-motion";
 import "./login.css";
+import { Link } from "react-router-dom";
 
 const Login = ({ setIsLoggedIn }) => {
   const onFinish = (values) => {
@@ -78,14 +79,16 @@ const Login = ({ setIsLoggedIn }) => {
             </Form.Item>
 
             <div style={{ justifyContent: "center", display: "flex" }}>
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="login-form-button"
-                onClick={() => setIsLoggedIn(true)}
-              >
-                Log in
-              </Button>
+              <Link to="/dashboard">
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="login-form-button"
+                  onClick={() => setIsLoggedIn(true)}
+                >
+                  Log in
+                </Button>
+              </Link>
             </div>
             <div style={{ justifyContent: "center", display: "flex" }}>
               Or &nbsp;<a href="#">register now!</a>
