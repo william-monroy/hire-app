@@ -3,5 +3,69 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  /* height: 100vh; */
+}
+
+.Sistema-grid {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 50px 50px 25px 50px;
+  text-align: center;
+}
+
+.Caja-aprendizaje-rapido {
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%),
+  url("../../public/assets/AprendizajeRapidoIMG1080.png");
+  background-size: cover;
+  height: 300px;
+  color: white;
+  border-radius: 20px;
+  line-height: 300px;
+  text-decoration: none;
+}
+
+.Caja-aprendizaje-rapido:hover {
+  outline: 3px solid #DC0032;
+  color: white;
+}
+
+.Caja-resolucion-problemas {
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%),
+  url("../../public/assets/ResolucionProblemasIMG.jpg");
+  background-size: contain;
+  background-position: center;
+  height: 300px;
+  color: white;
+  border-radius: 20px;
+  line-height: 300px;
+  text-decoration: none;
+}
+
+.Caja-resolucion-problemas:hover {
+  outline: 3px solid #DC0032;
+  color: white;
+}
+
+.Caja-trabajo-equipo {
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%),
+  url("../../public/assets/TrabajoEquipoIMG.jpg");
+  background-size: cover;
+  background-position: center;
+  height: 300px;
+  color: white;
+  border-radius: 20px;
+  line-height: 300px;
+  text-decoration: none;
+}
+
+.Caja-trabajo-equipo:hover {
+  outline: 3px solid #DC0032;
+  color: white;
+}
+
+.Center-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }

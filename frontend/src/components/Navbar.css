@@ -1,0 +1,11 @@
+/* Para que todo se alinie correctamente en el Navbar */
+.Navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.Submenu-usuario {
+    display: flex;
+    flex-direction: row;
+}
