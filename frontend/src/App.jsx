@@ -1,11 +1,27 @@
-import { Button } from "@nextui-org/react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 
 function App() {
   return (
-    <div className="App">
-      <h1>Hello World!</h1>
-      <Button color="primary" >Holi</Button>
-    </div>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />}>
+            <Route index element={<Login />} />
+            {/* <Route path="teams" element={<Teams />}>
+              <Route path=":teamId" element={<Team />} />
+              <Route path="new" element={<NewTeamForm />} />
+              <Route index element={<LeagueStandings />} />
+            </Route> */}
+          </Route>
+          <Route path="login" element={<Login />} />
+          <Route path="signup" element={<SignUp />} />
+          <Route path="home" element={<HomePage />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 

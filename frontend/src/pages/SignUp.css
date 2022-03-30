@@ -1,0 +1,11 @@
+.SignUp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url('https://www.denso.com/global/en/-/media/global/about-us/at-a-glance/at-a-glance-img-main.png?h=1080&la=en&w=1920&rev=f79c6ff5f3974ba2b7eae49e5468a2b6&hash=E1351F8437F988AFC1D903D637E18CD3');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
