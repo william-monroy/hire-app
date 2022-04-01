@@ -14,8 +14,12 @@
 }
 
 .Caja-aprendizaje-rapido {
-  background-image: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%),
-  url("../../public/assets/AprendizajeRapidoIMG1080.png");
+  background-image: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.8) 100%
+    ),
+    url("../../public/assets/AprendizajeRapidoIMG1080.png");
   background-size: cover;
   height: 300px;
   color: white;
@@ -25,13 +29,17 @@
 }
 
 .Caja-aprendizaje-rapido:hover {
-  outline: 3px solid #DC0032;
+  outline: 3px solid #dc0032;
   color: white;
 }
 
 .Caja-resolucion-problemas {
-  background-image: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%),
-  url("../../public/assets/ResolucionProblemasIMG.jpg");
+  background-image: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.8) 100%
+    ),
+    url("../../public/assets/ResolucionProblemasIMG.jpg");
   background-size: contain;
   background-position: center;
   height: 300px;
@@ -42,13 +50,17 @@
 }
 
 .Caja-resolucion-problemas:hover {
-  outline: 3px solid #DC0032;
+  outline: 3px solid #dc0032;
   color: white;
 }
 
 .Caja-trabajo-equipo {
-  background-image: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%),
-  url("../../public/assets/TrabajoEquipoIMG.jpg");
+  background-image: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.8) 100%
+    ),
+    url("../../public/assets/TrabajoEquipoIMG.jpg");
   background-size: cover;
   background-position: center;
   height: 300px;
@@ -59,7 +71,7 @@
 }
 
 .Caja-trabajo-equipo:hover {
-  outline: 3px solid #DC0032;
+  outline: 3px solid #dc0032;
   color: white;
 }
 

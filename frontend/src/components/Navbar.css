@@ -9,3 +9,14 @@
     display: flex;
     flex-direction: row;
 }
+
+.Link-navbar {
+    text-decoration: none;
+    color: #dc0032;
+    padding: 10px;
+}
+
+.Link-navbar:hover {
+    background-color: #dc0032;
+    color:white;
+}
