@@ -22,6 +22,7 @@
   border-radius: 20px;
   line-height: 300px;
   text-decoration: none;
+  transition: all 0.3s ease-in-out;
 }
 
 .Caja-aprendizaje-rapido:hover {
@@ -39,6 +40,7 @@
   border-radius: 20px;
   line-height: 300px;
   text-decoration: none;
+  transition: all 0.3s ease-in-out;
 }
 
 .Caja-resolucion-problemas:hover {
@@ -56,6 +58,7 @@
   border-radius: 20px;
   line-height: 300px;
   text-decoration: none;
+  transition: all 0.3s ease-in-out;
 }
 
 .Caja-trabajo-equipo:hover {
