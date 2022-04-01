@@ -1,0 +1,70 @@
+.Top-hero {
+  background-color: #dc0032;
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Sistema-grid {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 50px 50px 25px 50px;
+  text-align: center;
+}
+
+.Caja-aprendizaje-rapido {
+  background-image: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.8) 100%
+    ),
+    url("../../public/assets/AprendizajeRapidoIMG1080.png");
+  background-size: cover;
+  height: 300px;
+  color: white;
+  border-radius: 20px;
+  line-height: 300px;
+  text-decoration: none;
+}
+
+.Caja-resolucion-problemas {
+  background-image: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.8) 100%
+    ),
+    url("../../public/assets/ResolucionProblemasIMG.jpg");
+  background-size: contain;
+  background-position: center;
+  height: 300px;
+  color: white;
+  border-radius: 20px;
+  line-height: 300px;
+  text-decoration: none;
+}
+
+.Caja-trabajo-equipo {
+  background-image: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.8) 100%
+    ),
+    url("../../public/assets/TrabajoEquipoIMG.jpg");
+  background-size: cover;
+  background-position: center;
+  height: 300px;
+  color: white;
+  border-radius: 20px;
+  line-height: 300px;
+  text-decoration: none;
+}
+
+.Center-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
