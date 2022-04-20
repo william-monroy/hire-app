@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Modal,
   Input,
@@ -9,12 +9,15 @@ import {
   Spacer,
   Loading,
 } from "@nextui-org/react";
-import { Mail } from "./Mail";
-import { Password } from "./Password";
-import "./Login.css";
-import { Link } from "react-router-dom";
+import styles from "../styles/Login.module.css";
+import { Password } from "../components/Password";
+import { Mail } from "../components/Mail";
+import Link from "next/link";
+import AuthContext from "../stores/authContext";
 
 const Login = () => {
+  const {user, login, logout} = useContext(AuthContext);
+
   const [visible, setVisible] = useState(false);
   const [viewLoader, setViewLoader] = useState(true);
 
@@ -24,11 +27,11 @@ const Login = () => {
   }, 1500);
 
   return (
-    <div className="Login">
+    <div className={styles.Login}>
       {viewLoader ? <Loading type="points-opacity" size="xl" /> : null}
       <Modal blur preventClose aria-labelledby="modal-title" open={visible}>
         <Modal.Header>
-          <img src="assets/denso-logo.png" alt="Desno logo" width="150px" />
+          <img src="assets/denso-logo.png" alt="Denso logo" width="150px" />
           <Spacer y={3} />
         </Modal.Header>
         <Modal.Body>
@@ -64,18 +67,18 @@ const Login = () => {
           </Row>
         </Modal.Body>
         <Modal.Footer>
-          <Link to="/signup" style={{textDecoration: 'none'}}>
+          <Link href="/signup" style={{textDecoration: 'none'}} passHref>
             <Button auto flat color="error">
             Regístrate
             </Button>
           </Link>
-          <Link to="/home" style={{textDecoration: 'none'}}>
-            <Button auto>Iniciar Sesión</Button>
+          <Link href="/" style={{textDecoration: 'none'}} passHref>
+            <Button auto onClick={login}>Iniciar Sesión</Button>
           </Link>
         </Modal.Footer>
       </Modal>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

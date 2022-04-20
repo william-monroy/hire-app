@@ -9,10 +9,11 @@ import {
   Spacer,
   Loading,
 } from "@nextui-org/react";
-import { Mail } from "./Mail";
-import { Password } from "./Password";
-import "./SignUp.css";
-import { Link } from "react-router-dom";
+import { Mail } from "../components/Mail";
+import { Password } from "../components/Password";
+import Link from "next/link";
+import styles from '../styles/SignUp.module.css';
+
 
 const SignUp = () => {
   const [visible, setVisible] = useState(false);
@@ -24,7 +25,7 @@ const SignUp = () => {
   }, 1500);
 
   return (
-    <div className="SignUp">
+    <div className={styles.SignUp}>
       {viewLoader ? <Loading type="points-opacity" size="xl" /> : null}
       <Modal blur preventClose aria-labelledby="modal-title" open={visible}>
         <Modal.Header>
@@ -78,12 +79,12 @@ const SignUp = () => {
           </Row>
         </Modal.Body>
         <Modal.Footer>
-          <Link to="/login" style={{textDecoration: 'none'}}>
+          <Link href="/login" style={{textDecoration: 'none'}} passHref>
             <Button auto flat color="error">
             Iniciar Sesión
             </Button>
           </Link>
-          <Link to="/home" style={{textDecoration: 'none'}}>
+          <Link href="/home" style={{textDecoration: 'none'}} passHref>
           <Button auto>Registrarse</Button>
           </Link>
         </Modal.Footer>
