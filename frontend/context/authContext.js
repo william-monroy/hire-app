@@ -1,4 +1,6 @@
+import { useRouter } from "next/router";
 import { createContext, useState, useEffect } from "react";
+import axios from 'axios'
 
 const AuthContext = createContext({
   user: null,
@@ -10,23 +12,21 @@ const AuthContext = createContext({
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    // test the connection with backend
-  }, []);
-
-  const login = () => {
-    setUser({
-      id: "1",
-      name: "William Monroy",
-      email: "example@gmail.com",
-      avatar: "https://avatars.githubusercontent.com/u/58092741?v=4",
-      admin: true,
-    });
-    // console.log(user);
+  const login = (user) => {
+    setUser(user);
   };
 
-  const logout = () => {
-    setUser(null);
+  const router = useRouter();
+
+  const logout = async (e) => {
+      e.preventDefault();
+      const userAPI = await axios.post("/api/auth/logout");
+      if (userAPI.status === 200) {
+        router.push("/login");
+      } else {
+        console.log("error");
+        setError("No se puede hacer logout");
+      }
   };
 
   const context = { user, login, logout };

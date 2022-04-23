@@ -14,17 +14,38 @@ import { Password } from "../components/Password";
 import { Mail } from "../components/Mail";
 import Link from "next/link";
 import AuthContext from "../context/authContext";
+import axios from "axios";
+import { useRouter } from "next/router";
 
 const Login = () => {
-  const {user, login, logout} = useContext(AuthContext);
+  const { user, login, logout } = useContext(AuthContext);
 
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
   const [viewLoader, setViewLoader] = useState(true);
+  const [error, setError] = useState("");
+
+  const router = useRouter();
 
   setTimeout(() => {
     setVisible(true);
     setViewLoader(false);
   }, 1500);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const credentials = { username, password };
+    const userAPI = await axios.post("/api/auth/login", credentials);
+    if (userAPI.status === 200) {
+      router.push("/dashboard/home");
+      console.log(userAPI.data.data);
+      login(userAPI.data.data);
+    } else {
+      console.log("error");
+      setError("Usuario o contraseña incorrectos");
+    }
+  };
 
   return (
     <div className={styles.Login}>
@@ -43,6 +64,11 @@ const Login = () => {
             size="lg"
             placeholder="Correo"
             contentLeft={<Mail fill="currentColor" />}
+            aria-label="Correo"
+            onChange={(e) => {
+              setUsername(e.target.value);
+              setError("");
+            }}
           />
           <Input
             clearable
@@ -53,7 +79,17 @@ const Login = () => {
             placeholder="Contraseña"
             type={["password"]}
             contentLeft={<Password fill="currentColor" />}
+            aria-label="Contraseña"
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setError("");
+            }}
           />
+          {error != "" ? (
+            <Text size={14} color="primary">
+              {error}
+            </Text>
+          ) : null}
           <Spacer y={0.5} />
           <Row justify="space-between">
             <Checkbox>
@@ -63,18 +99,18 @@ const Login = () => {
           </Row>
         </Modal.Body>
         <Modal.Footer>
-          <Link href="/signup" style={{textDecoration: 'none'}} passHref>
+          <Link href="/signup" style={{ textDecoration: "none" }} passHref>
             <Button auto flat color="error">
-            Regístrate
+              Regístrate
             </Button>
           </Link>
-          <Link href="/" style={{textDecoration: 'none'}} passHref>
-            <Button auto onClick={login}>Iniciar Sesión</Button>
-          </Link>
+          <Button auto onClick={handleSubmit}>
+            Iniciar Sesión
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

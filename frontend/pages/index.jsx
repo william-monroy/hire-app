@@ -12,13 +12,6 @@ import { Text } from "@nextui-org/react";
 const HomePage = () => {
   const { user, login, logout } = useContext(AuthContext);
 
-  // useEffect(() => {
-  //   const { pathname } = Router;
-  //   if (pathname == "/" && user == null) {
-  //     Router.push("/login");
-  //   }
-  // }, [user]);
-
   return (
     <div className={styles.container}>
       <Head>

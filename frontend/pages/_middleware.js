@@ -1,19 +1,40 @@
-import { useContext } from "react";
 import { NextResponse } from "next/server";
-// import AuthContext from "../context/authContext";
+import { verify } from "jsonwebtoken";
+
+const secret = process.env.SECRET;
 
 export default function middleware(req) {
-  const url = req.url;
-  // const { user } = useContext(AuthContext);
-  const user = null;
+  const { cookies } = req;
 
-  if (url.includes("/home")) {
-    if (user == null) {
+  const jwt = cookies.DensoJWT;
+
+  const url = req.url;
+
+  if (url.includes("/login")) {
+    if (jwt) {
+      try {
+        verify(jwt, secret);
+        return NextResponse.redirect("/");
+      } catch (e) {
+        return NextResponse.next();
+      }
+    }
+  }
+
+  if (url.includes("/dashboard")) {
+    if (jwt == undefined) {
       const url = req.nextUrl.clone();
       url.pathname = "/login";
       return NextResponse.redirect(url);
     }
 
-    return NextResponse.next();
+    try {
+      const user = verify(jwt, secret);
+      console.log(user)
+      return NextResponse.next();
+    } catch (e) {
+      return NextResponse.redirect("/login");
+    }
   }
+  return NextResponse.next();
 }

@@ -22,13 +22,13 @@ const Sidebar = () => {
       <div className={styles.Sidebar__top}>
         <div className={styles.Sidebar__header}>
           <img
-            src="assets/denso-logo.png"
+            src="../assets/denso-logo.png"
             alt="Denso logo"
             width="150px"
             className={styles.densoLogo}
           />
           <img
-            src="assets/d-logo.png"
+            src="../assets/d-logo.png"
             className={styles.dLogo}
             alt="Denso logo"
           />
@@ -93,7 +93,7 @@ const Sidebar = () => {
           </div>
           <div className={styles.Sidebar_user__info}>
             <Text size={16} margin="0px" b>
-              {user.name}
+              {user.fname} {user.lname}
             </Text>
             <Text size={13} margin="0px">
               {user.email}
