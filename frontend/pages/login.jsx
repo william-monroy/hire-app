@@ -13,7 +13,7 @@ import styles from "../styles/Login.module.css";
 import { Password } from "../components/Password";
 import { Mail } from "../components/Mail";
 import Link from "next/link";
-import AuthContext from "../stores/authContext";
+import AuthContext from "../context/authContext";
 
 const Login = () => {
   const {user, login, logout} = useContext(AuthContext);
@@ -54,10 +54,6 @@ const Login = () => {
             type={["password"]}
             contentLeft={<Password fill="currentColor" />}
           />
-          {/* <Spacer />
-          <Input underlined labelPlaceholder="Correo" color="primary" />
-          <Spacer />
-          <Input underlined labelPlaceholder="Contraseña" color="primary" /> */}
           <Spacer y={0.5} />
           <Row justify="space-between">
             <Checkbox>

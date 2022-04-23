@@ -6,8 +6,11 @@
 
 ## Correr programa
 1. Abrir venv desde terminal. <br>
-```source venv/bin/activate```
-- Para desactivar escribir: <br>
+ - ```source venv/bin/activate``` Linux
+
+- ```.\venv\bin\activate``` Windows
+
+Para desactivar escribir: <br>
 ```deactivate```
 2. Correr flask: <br>
 ```flask run```

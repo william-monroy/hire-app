@@ -2,10 +2,10 @@ import { useContext } from "react";
 import Navbar from "../components/Navbar";
 import { createTheme, NextUIProvider } from "@nextui-org/react";
 import "../styles/globals.css";
-import AuthContext, { AuthContextProvider } from "../stores/authContext";
+import AuthContext, { AuthContextProvider } from "../context/authContext";
 
 const densoLightTheme = createTheme({
-  type: "light",
+  type: "ligth",
   theme: {
     colors: {
       // brand colors
@@ -34,7 +34,6 @@ function MyApp({ Component, pageProps }) {
   return (
     <NextUIProvider theme={densoLightTheme}>
       <AuthContextProvider>
-        <Navbar />
         <Component {...pageProps} />
       </AuthContextProvider>
     </NextUIProvider>

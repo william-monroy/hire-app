@@ -1,0 +1,16 @@
+.Content {
+  width: calc(100% - 250px);
+  height: calc(100% - 70px);
+  background: var(--nextui-colors-headerBackground);
+  /* background-color: tomato; */
+  margin-left: 250px;
+  margin-top: 70px;
+  padding: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .Content {
+    width: calc(100% - 60px);
+    margin-left: 60px;
+  }
+}

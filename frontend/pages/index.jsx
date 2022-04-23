@@ -3,17 +3,21 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Router from "next/router";
-import AuthContext from "../stores/authContext";
+import AuthContext from "../context/authContext";
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
+import Content from "../components/Content";
+import { Text } from "@nextui-org/react";
 
 const HomePage = () => {
   const { user, login, logout } = useContext(AuthContext);
 
-  useEffect(() => {
-    const { pathname } = Router;
-    if (pathname == "/" && user == null) {
-      Router.push("/login");
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   const { pathname } = Router;
+  //   if (pathname == "/" && user == null) {
+  //     Router.push("/login");
+  //   }
+  // }, [user]);
 
   return (
     <div className={styles.container}>
@@ -26,11 +30,11 @@ const HomePage = () => {
       <main className={styles.main}>
         {user ? (
           <>
-            <p>{user.id}</p>
-            <p>{user.name}</p>
-            <p>{user.email}</p>
-            <img src={user.avatar} alt={user.name} />
-            <p>{user.admin?'admin':'user'}</p>
+            <Navbar />
+            <Sidebar />
+            <Content>
+              
+            </Content>
           </>
         ) : null}
       </main>
