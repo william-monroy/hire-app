@@ -14,9 +14,8 @@ import {
 import AuthContext from "../context/authContext";
 import { Text } from "@nextui-org/react";
 
-const Sidebar = () => {
+const Sidebar = ({ current = 0 }) => {
   const { user } = useContext(AuthContext);
-
   return (
     <div className={styles.Sidebar}>
       <div className={styles.Sidebar__top}>
@@ -38,45 +37,45 @@ const Sidebar = () => {
 
           <SidebarItem
             icon={<AiOutlineHome />}
-            title="Home"
-            active={true}
-            color="DC0032"
+            title="Inicio"
+            active={current == 0 ? true : false}
+            to="/dashboard/home"
           />
           <SidebarItem
             icon={<HiOutlineBriefcase />}
-            title="Job Posts"
-            active={false}
-            color="DC0032"
+            title="Publicaciones de Puestos"
+            active={current == 1 ? true : false}
+            to="/dashboard/posts"
           />
           <SidebarItem
             icon={<HiOutlineAnnotation />}
-            title="Messages"
-            active={false}
-            color="DC0032"
+            title="Mensajes"
+            active={current == 2 ? true : false}
+            to="/dashboard/messages"
           />
           <SidebarItem
             icon={<HiOutlineOfficeBuilding />}
-            title="Company Profile"
-            active={false}
-            color="DC0032"
+            title="Perfil de la Empresa"
+            active={current == 3 ? true : false}
+            to="/dashboard/company-profile"
           />
           <SidebarItem
             icon={<HiOutlineUserGroup />}
-            title="All Aplicants"
-            active={false}
-            color="DC0032"
+            title="Aplicantes"
+            active={current == 4 ? true : false}
+            to="/dashboard/applicants"
           />
           <SidebarItem
             icon={<HiOutlineClipboardCheck />}
-            title="Review Applicants"
-            active={false}
-            color="DC0032"
+            title="Revisar Solicitudes"
+            active={current == 5 ? true : false}
+            to="/dashboard/review"
           />
           <SidebarItem
             icon={<HiOutlineCog />}
-            title="Settings"
-            active={false}
-            color="DC0032"
+            title="Ajustes"
+            active={current == 6 ? true : false}
+            to="/dashboard/settings"
           />
         </div>
       </div>

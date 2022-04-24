@@ -20,7 +20,7 @@ const Navbar = () => {
             color="primary"
             className={styles.Navbar__btn}
           >
-            Logout
+            Cerrar Sesión
           </Button>
           <Button
             onClick={logout}
@@ -28,7 +28,7 @@ const Navbar = () => {
             className={styles.Navbar__btnSm}
             auto
           >
-            Logout
+            Cerrar Sesión
           </Button>
         </>
       ) : null}

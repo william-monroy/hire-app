@@ -1,7 +1,11 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import styles from "./SidebarItem.module.css";
 
-const SidebarItem = ({ icon, title, active = false, color }) => {
+const SidebarItem = ({ icon, title, active = false, to }) => {
+
+  const router = useRouter();
+
   const [over, setOver] = useState(false);
 
   const iconStyle = {
@@ -83,6 +87,7 @@ const SidebarItem = ({ icon, title, active = false, color }) => {
       className={styles.sidebar__item}
       onMouseOver={() => setOver(true)}
       onMouseLeave={() => setOver(false)}
+      onClick={() => {router.push(to)}}
     >
       <div
         style={over ? iconStyleHover : iconStyle}
