@@ -16,6 +16,7 @@ import Link from "next/link";
 import AuthContext from "../context/authContext";
 import axios from "axios";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 const Login = () => {
   const { user, login, logout } = useContext(AuthContext);
@@ -49,6 +50,11 @@ const Login = () => {
 
   return (
     <div className={styles.Login}>
+      <Head>
+        <title>Login | Denso</title>
+        <meta name="description" content="Login Denso hire-app" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       {viewLoader ? <Loading type="points-opacity" size="xl" /> : null}
       <Modal blur preventClose aria-labelledby="modal-title" open={visible}>
         <Modal.Header>
