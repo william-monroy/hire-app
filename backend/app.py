@@ -1,10 +1,13 @@
-from flask import Flask, jsonify
+from crypt import methods
+from unittest import TextTestRunner
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-# from flask_cors import CORS
+import datetime
+from flask_cors import CORS
 
 app = Flask(__name__)
-# CORS(app)
+CORS(app)
 
 # pymysql error: https://stackoverflow.com/questions/22252397/importerror-no-module-named-mysqldb
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:@localhost/densodb"
@@ -177,7 +180,70 @@ def index_test2():
 
 @app.route("/test3")
 def index_test3():
-    tests3 = Test2.query.all()
+    tests3 = Test3.query.all()
     test3_schema = Test3Schema(many=True)
     output = test3_schema.dump(tests3)
     return jsonify({"datos": output})
+
+@app.route("/api/auth/login", methods=["GET", "POST"])
+def index_auth():
+    if request.method == "POST": 
+        email = request.json["email"]
+        password = request.json["password"]
+
+        #Revisar si el candidate existe
+        try:
+            raw_email = db.session.execute("SELECT email FROM candidate WHERE email = '" + email + "'").fetchall()
+            raw_email = raw_email[0][0]
+            if raw_email == email:
+                raw_password = db.session.execute("SELECT passwordHash FROM candidate WHERE passwordHash = '" + password + "'").fetchall()
+                raw_password = raw_password[0][0]
+                if raw_password == password:
+                    fname = db.session.execute("SELECT fname FROM candidate WHERE email = '" + raw_email + "'").fetchall()
+                    fname = fname[0][0]
+                    lname = db.session.execute("SELECT lname FROM candidate WHERE email = '" + raw_email + "'").fetchall()
+                    lname = lname[0][0]
+                    phone_number = db.session.execute("SELECT phoneNumber FROM candidate WHERE email = '" + raw_email + "'").fetchall()
+                    phone_number = phone_number[0][0]
+                    birthday = db.session.execute("SELECT age FROM candidate WHERE email = '" + raw_email + "'").fetchall()
+                    birthday = birthday[0][0]
+                    return jsonify({
+                        "fname": fname, 
+                        "lname": lname,
+                        "email": email,
+                        "cellphone": phone_number,
+                        "birthday": birthday,
+                        "admin": False
+                    })
+                return "Error", 204
+            return "Error", 204
+        
+        # Revisar si el administrador existe    
+        except IndexError:
+            try:
+                raw_email = db.session.execute("SELECT email FROM administrator WHERE email = '" + email + "'").fetchall()
+                raw_email = raw_email[0][0]
+                if raw_email == email:
+                    raw_password = db.session.execute("SELECT passwordHash FROM administrator WHERE passwordHash = '" + password + "'").fetchall()
+                    raw_password = raw_password[0][0]
+                    if raw_password == password:
+                        fname = db.session.execute("SELECT fname FROM administrator WHERE email = '" + raw_email + "'").fetchall()
+                        fname = fname[0][0]
+                        lname = db.session.execute("SELECT lname FROM administrator WHERE email = '" + raw_email + "'").fetchall()
+                        lname = lname[0][0]
+                        phone_number = db.session.execute("SELECT phoneNumber FROM administrator WHERE email = '" + raw_email + "'").fetchall()
+                        phone_number = phone_number[0][0]
+                        birthday = db.session.execute("SELECT age FROM administrator WHERE email = '" + raw_email + "'").fetchall()
+                        birthday = birthday[0][0]
+                        return jsonify({
+                            "fname": fname, 
+                            "lname": lname,
+                            "email": email,
+                            "cellphone": phone_number,
+                            "birthday": birthday,
+                            "admin": True
+                        })
+                    return "Error", 204
+                return "Error", 204
+            except IndexError:
+                return jsonify({"Message": "Invalid Credentials"}), 401

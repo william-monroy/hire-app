@@ -69,6 +69,8 @@ const Login = () => {
             color="primary"
             size="lg"
             placeholder="Correo"
+            // Para recibir como json
+            name="email"
             contentLeft={<Mail fill="currentColor" />}
             aria-label="Correo"
             onChange={(e) => {
@@ -83,6 +85,8 @@ const Login = () => {
             color="primary"
             size="lg"
             placeholder="Contraseña"
+            // Para recibir como json
+            name="password"
             type={["password"]}
             contentLeft={<Password fill="currentColor" />}
             aria-label="Contraseña"
