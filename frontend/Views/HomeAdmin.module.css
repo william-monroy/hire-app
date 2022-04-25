@@ -1,0 +1,17 @@
+.header{
+  width: 100%;
+}
+
+.headerSm{
+  display: none;
+  width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+  .header{
+    display: none;
+  }
+  .headerSm{
+    display: block;
+  }
+}

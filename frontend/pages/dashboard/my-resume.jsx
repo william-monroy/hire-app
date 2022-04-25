@@ -2,18 +2,18 @@ import React from 'react'
 import Content from '../../components/Content'
 import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
-import styles from '../../styles/Messages.module.css'
+import styles from '../../styles/MyResume.module.css'
 
-const Messages = () => {
+const MyResume = () => {
   return (
-    <div className={styles.Messages}>
+    <div className={styles.MyResume}>
       <Navbar />
-      <Sidebar current={2}/>
+      <Sidebar current={8}/>
       <Content>
-      Messages
+      MyResume
       </Content>
     </div>
   )
 }
 
-export default Messages
+export default MyResume

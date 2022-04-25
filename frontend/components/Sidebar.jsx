@@ -10,6 +10,9 @@ import {
   HiOutlineUserGroup,
   HiOutlineClipboardCheck,
   HiOutlineCog,
+  HiOutlineSearch,
+  HiOutlineHeart,
+  HiOutlineDocumentText,
 } from "react-icons/hi";
 import AuthContext from "../context/authContext";
 import { Text } from "@nextui-org/react";
@@ -41,36 +44,74 @@ const Sidebar = ({ current = 0 }) => {
             active={current == 0 ? true : false}
             to="/dashboard/home"
           />
-          <SidebarItem
-            icon={<HiOutlineBriefcase />}
-            title="Publicaciones de Puestos"
-            active={current == 1 ? true : false}
-            to="/dashboard/posts"
-          />
+          {user.admin ? (
+            <SidebarItem
+              icon={<HiOutlineBriefcase />}
+              title="Publicaciones de Puestos"
+              active={current == 1 ? true : false}
+              to="/dashboard/posts"
+            />
+          ) : (
+            <SidebarItem
+              icon={<HiOutlineSearch />}
+              title="Buscar Trabajo"
+              active={current == 9 ? true : false}
+              to="/dashboard/find-jobs"
+            />
+          )}
           <SidebarItem
             icon={<HiOutlineAnnotation />}
             title="Mensajes"
             active={current == 2 ? true : false}
             to="/dashboard/messages"
           />
-          <SidebarItem
-            icon={<HiOutlineOfficeBuilding />}
-            title="Perfil de la Empresa"
-            active={current == 3 ? true : false}
-            to="/dashboard/company-profile"
-          />
-          <SidebarItem
-            icon={<HiOutlineUserGroup />}
-            title="Aplicantes"
-            active={current == 4 ? true : false}
-            to="/dashboard/applicants"
-          />
-          <SidebarItem
-            icon={<HiOutlineClipboardCheck />}
-            title="Revisar Solicitudes"
-            active={current == 5 ? true : false}
-            to="/dashboard/review"
-          />
+          {user.admin ? (
+            <SidebarItem
+              icon={<HiOutlineOfficeBuilding />}
+              title="Perfil de la Empresa"
+              active={current == 3 ? true : false}
+              to="/dashboard/company-profile"
+            />
+          ) : (
+            <SidebarItem
+              icon={<HiOutlineHeart />}
+              title="Vida en Denso"
+              active={current == 10 ? true : false}
+              to="/dashboard/life-at-denso"
+            />
+          )}
+          {user.admin ? (
+            <>
+              <SidebarItem
+                icon={<HiOutlineUserGroup />}
+                title="Aplicantes"
+                active={current == 4 ? true : false}
+                to="/dashboard/applicants"
+              />
+              <SidebarItem
+                icon={<HiOutlineClipboardCheck />}
+                title="Revisar Solicitudes"
+                active={current == 5 ? true : false}
+                to="/dashboard/review"
+              />
+            </>
+          ) : (
+            <>
+              <SidebarItem
+              icon={<HiOutlineBriefcase />}
+              title="Mis Solicitudes"
+              active={current == 7 ? true : false}
+              to="/dashboard/my-applications"
+            />
+              <SidebarItem
+                icon={<HiOutlineDocumentText />}
+                title="Mi Currículum"
+                active={current == 8 ? true : false}
+                to="/dashboard/my-resume"
+              />
+            </>
+          )}
+
           <SidebarItem
             icon={<HiOutlineCog />}
             title="Ajustes"
@@ -94,7 +135,7 @@ const Sidebar = ({ current = 0 }) => {
             <Text size={16} margin="0px" b>
               {user.fname} {user.lname}
             </Text>
-            <Text size={13} margin="0px">
+            <Text size={13} margin="0px" color="gray">
               {user.email}
             </Text>
           </div>
