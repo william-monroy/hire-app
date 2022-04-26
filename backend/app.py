@@ -52,7 +52,8 @@ class Candidate(db.Model):
     test2 = db.relationship("Test2", back_populates="candidate", uselist=False)
     test3 = db.relationship("Test3", back_populates="candidate", uselist=False)
 
-    def __init__(self, fname, lname, age, email, phoneNumber, passwordHash, idAdministrator):
+    def __init__(self, id, fname, lname, age, email, phoneNumber, passwordHash, idAdministrator):
+        self.id = id
         self.fname = fname
         self.lname = lname
         self.age = age
@@ -259,7 +260,16 @@ def index_signup():
     password = request.json["password"]
     # birthday
 
+    ids = db.session.execute("SELECT id FROM candidate").fetchall()
+
+    max_id = 0
+
+    for i in range(len(ids)):
+        if ids[i][0] > max_id:
+            max_id = ids[i][0]
+
     candidate = Candidate(
+        id = max_id+1,
         fname = f_name,
         lname = l_name,
         age = "2000-01-01",
