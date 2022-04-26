@@ -52,8 +52,7 @@ class Candidate(db.Model):
     test2 = db.relationship("Test2", back_populates="candidate", uselist=False)
     test3 = db.relationship("Test3", back_populates="candidate", uselist=False)
 
-    def __init__(self, id, fname, lname, age, email, phoneNumber, passwordHash, idAdministrator):
-        self.id = id
+    def __init__(self, fname, lname, age, email, phoneNumber, passwordHash, idAdministrator):
         self.fname = fname
         self.lname = lname
         self.age = age
@@ -73,8 +72,7 @@ class Test1(db.Model):
     idCandidate = db.Column(db.Integer, db.ForeignKey('candidate.id'))
     candidate = db.relationship("Candidate", back_populates="test1")
 
-    def __init__(self, id, answer1, answer2, answer3, answer4, answer5, answer6, idCandidate):
-        self.id = id
+    def __init__(self, answer1, answer2, answer3, answer4, answer5, answer6, idCandidate):
         self.answer1 = answer1
         self.answer2 = answer2
         self.answer3 = answer3
@@ -93,8 +91,7 @@ class Test2(db.Model):
     idCandidate = db.Column(db.Integer, db.ForeignKey('candidate.id'))
     candidate = db.relationship("Candidate", back_populates="test2")
 
-    def __init__(self, id, answer1, answer2, answer3, answer4, answer5, idCandidate):
-        self.id = id
+    def __init__(self, answer1, answer2, answer3, answer4, answer5, idCandidate):
         self.answer1 = answer1
         self.answer2 = answer2
         self.answer3 = answer3
@@ -113,8 +110,7 @@ class Test3(db.Model):
     idCandidate = db.Column(db.Integer, db.ForeignKey('candidate.id'))
     candidate = db.relationship("Candidate", back_populates="test3")
 
-    def __init__(self, id, answer1, answer2, answer3, answer4, answer5, answer6, idCandidate):
-        self.id = id
+    def __init__(self, answer1, answer2, answer3, answer4, answer5, answer6, idCandidate):
         self.answer1 = answer1
         self.answer2 = answer2
         self.answer3 = answer3
@@ -186,7 +182,7 @@ def index_test3():
     return jsonify({"datos": output})
 
 @app.route("/api/auth/login", methods=["GET", "POST"])
-def index_auth():
+def index_login():
     if request.method == "POST": 
         email = request.json["email"]
         password = request.json["password"]
@@ -199,6 +195,8 @@ def index_auth():
                 raw_password = db.session.execute("SELECT passwordHash FROM candidate WHERE passwordHash = '" + password + "'").fetchall()
                 raw_password = raw_password[0][0]
                 if raw_password == password:
+                    id = db.session.execute("SELECT id FROM candidate WHERE email = '" + raw_email + "'").fetchall()
+                    id = id[0][0]
                     fname = db.session.execute("SELECT fname FROM candidate WHERE email = '" + raw_email + "'").fetchall()
                     fname = fname[0][0]
                     lname = db.session.execute("SELECT lname FROM candidate WHERE email = '" + raw_email + "'").fetchall()
@@ -208,6 +206,7 @@ def index_auth():
                     birthday = db.session.execute("SELECT age FROM candidate WHERE email = '" + raw_email + "'").fetchall()
                     birthday = birthday[0][0]
                     return jsonify({
+                        "id": id,
                         "fname": fname, 
                         "lname": lname,
                         "email": email,
@@ -227,6 +226,8 @@ def index_auth():
                     raw_password = db.session.execute("SELECT passwordHash FROM administrator WHERE passwordHash = '" + password + "'").fetchall()
                     raw_password = raw_password[0][0]
                     if raw_password == password:
+                        id = db.session.execute("SELECT id FROM administrator WHERE email = '" + raw_email + "'").fetchall()
+                        id = id[0][0]
                         fname = db.session.execute("SELECT fname FROM administrator WHERE email = '" + raw_email + "'").fetchall()
                         fname = fname[0][0]
                         lname = db.session.execute("SELECT lname FROM administrator WHERE email = '" + raw_email + "'").fetchall()
@@ -236,6 +237,7 @@ def index_auth():
                         birthday = db.session.execute("SELECT age FROM administrator WHERE email = '" + raw_email + "'").fetchall()
                         birthday = birthday[0][0]
                         return jsonify({
+                            "id": id,
                             "fname": fname, 
                             "lname": lname,
                             "email": email,
@@ -247,3 +249,53 @@ def index_auth():
                 return "Error", 204
             except IndexError:
                 return jsonify({"Message": "Invalid Credentials"}), 401
+
+@app.route("/api/route/signup", methods=["POST"])
+def index_signup():
+    f_name = request.json["f_name"]
+    l_name = request.json["l_name"]
+    email = request.json["email"]
+    phone = request.json["phone"]
+    password = request.json["password"]
+    # birthday
+
+    candidate = Candidate(
+        fname = f_name,
+        lname = l_name,
+        age = "2000-01-01",
+        email = email,
+        phoneNumber = phone,
+        passwordHash = password,
+        idAdministrator= 1
+    )
+
+    db.session.add(candidate)
+    db.session.commit()
+
+    return "Exito", 201
+
+@app.route("/api/game/scores", methods=["POST"])
+def index_score():
+    try:
+        answer1 = request.json["answer1"]
+        answer2 = request.json["answer2"]
+        answer3 = request.json["answer3"]
+        answer4 = request.json["answer4"]
+        answer5 = request.json["answer5"]
+        id_candidate = request.json["id_candidate"]
+        
+        result_test2 = Test2(
+            answer1 = answer1,
+            answer2 = answer2,
+            answer3 = answer3,
+            answer4 = answer4,
+            answer5 = answer5,
+            idCandidate = id_candidate
+        )
+
+        db.session.add(result_test2)
+        db.session.commit()
+
+        return "Exito", 201
+    except:
+        return jsonify({"Message": "Error"}), 400
