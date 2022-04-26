@@ -288,7 +288,7 @@ def index_signup():
     except:
         return jsonify({"Message": "Error"}), 400
 
-@app.route("/api/game/candidate", methods=["POST"])
+@app.route("/api/get/candidate", methods=["POST"])
 def index_canidate_sing():
     try:
         id_candidate = request.json["id"]
@@ -322,6 +322,41 @@ def index_canidate_sing():
             "password": password,
             "admin": False,
             "idAdmin": id_admin
+        }), 201
+    except:
+        return jsonify({"Message": "Error"}), 400
+
+@app.route("/api/get/administrator", methods=["POST"])
+def index_administrator_sing():
+    try:
+        id_administrator = request.json["id"]
+
+        id_administrator = db.session.execute("SELECT id FROM administrator WHERE id = " + str(id_administrator) + "").fetchall()
+
+        if len(id_administrator) == 0:
+            return jsonify({"Message": "Error"}), 400
+        
+        id_administrator = str(id_administrator[0][0])
+
+        fname = db.session.execute("SELECT fname FROM administrator WHERE id = '" + id_administrator + "'").fetchall()
+        fname = fname[0][0]
+        lname = db.session.execute("SELECT lname FROM administrator WHERE id = '" + id_administrator + "'").fetchall()
+        lname = lname[0][0]
+        phone_number = db.session.execute("SELECT phoneNumber FROM administrator WHERE id = '" + id_administrator + "'").fetchall()
+        phone_number = phone_number[0][0]
+        birthday = db.session.execute("SELECT age FROM administrator WHERE id = '" + id_administrator + "'").fetchall()
+        birthday = birthday[0][0]
+        password = db.session.execute("SELECT passwordHash FROM administrator WHERE id = '" + id_administrator + "'").fetchall()
+        password = password[0][0]
+
+        return jsonify({
+            "id": id_administrator,
+            "fname": fname,
+            "lname": lname, 
+            "phone": phone_number,
+            "birthday": birthday,
+            "password": password,
+            "admin": True
         }), 201
     except:
         return jsonify({"Message": "Error"}), 400
