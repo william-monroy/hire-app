@@ -1,4 +1,5 @@
 from crypt import methods
+from email.errors import MultipartInvariantViolationDefect
 from unittest import TextTestRunner
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
@@ -253,36 +254,77 @@ def index_login():
 
 @app.route("/api/route/signup", methods=["POST"])
 def index_signup():
-    f_name = request.json["f_name"]
-    l_name = request.json["l_name"]
-    email = request.json["email"]
-    phone = request.json["phone"]
-    password = request.json["password"]
-    # birthday
+    try: 
+        f_name = request.json["f_name"]
+        l_name = request.json["l_name"]
+        email = request.json["email"]
+        phone = request.json["phone"]
+        password = request.json["password"]
+        # birthday
 
-    ids = db.session.execute("SELECT id FROM candidate").fetchall()
+        ids = db.session.execute("SELECT id FROM candidate").fetchall()
 
-    max_id = 0
+        max_id = 0
 
-    for i in range(len(ids)):
-        if ids[i][0] > max_id:
-            max_id = ids[i][0]
+        for i in range(len(ids)):
+            if ids[i][0] > max_id:
+                max_id = ids[i][0]
 
-    candidate = Candidate(
-        id = max_id+1,
-        fname = f_name,
-        lname = l_name,
-        age = "2000-01-01",
-        email = email,
-        phoneNumber = phone,
-        passwordHash = password,
-        idAdministrator= 1
-    )
+        candidate = Candidate(
+            id = max_id+1,
+            fname = f_name,
+            lname = l_name,
+            age = "2000-01-01",
+            email = email,
+            phoneNumber = phone,
+            passwordHash = password,
+            idAdministrator= 1
+        )
 
-    db.session.add(candidate)
-    db.session.commit()
+        db.session.add(candidate)
+        db.session.commit()
 
-    return "Exito", 201
+        return "Exito", 201
+    except:
+        return jsonify({"Message": "Error"}), 400
+
+@app.route("/api/game/candidate", methods=["POST"])
+def index_canidate_sing():
+    try:
+        id_candidate = request.json["id"]
+
+        id_candidate = db.session.execute("SELECT id FROM candidate WHERE id = " + str(id_candidate) + "").fetchall()
+
+        if len(id_candidate) == 0:
+            return jsonify({"Message": "Error"}), 400
+        
+        id_candidate = str(id_candidate[0][0])
+
+        fname = db.session.execute("SELECT fname FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
+        fname = fname[0][0]
+        lname = db.session.execute("SELECT lname FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
+        lname = lname[0][0]
+        phone_number = db.session.execute("SELECT phoneNumber FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
+        phone_number = phone_number[0][0]
+        birthday = db.session.execute("SELECT age FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
+        birthday = birthday[0][0]
+        password = db.session.execute("SELECT passwordHash FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
+        password = password[0][0]
+        id_admin = db.session.execute("SELECT idAdministrator FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
+        id_admin = id_admin[0][0]
+
+        return jsonify({
+            "id": id_candidate,
+            "fname": fname,
+            "lname": lname, 
+            "phone": phone_number,
+            "birthday": birthday,
+            "password": password,
+            "admin": False,
+            "idAdmin": id_admin
+        }), 201
+    except:
+        return jsonify({"Message": "Error"}), 400
 
 @app.route("/api/game/scores", methods=["POST"])
 def index_score():
