@@ -1,6 +1,3 @@
-from crypt import methods
-from email.errors import MultipartInvariantViolationDefect
-from unittest import TextTestRunner
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
@@ -81,7 +78,7 @@ class Test1(db.Model):
         self.answer4 = answer4
         self.answer5 = answer5
         self.answer6 = answer6
-        self.idCandidate = self.idCandidate
+        self.idCandidate = idCandidate
 
 class Test2(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -99,7 +96,7 @@ class Test2(db.Model):
         self.answer3 = answer3
         self.answer4 = answer4
         self.answer5 = answer5
-        self.idCandidate = self.idCandidate
+        self.idCandidate = idCandidate
 
 class Test3(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -119,7 +116,7 @@ class Test3(db.Model):
         self.answer4 = answer4
         self.answer5 = answer5
         self.answer6 = answer6
-        self.idCandidate = self.idCandidate
+        self.idCandidate = idCandidate
 
 # SCHEMAS
 class AdministratorSchema(ma.SQLAlchemyAutoSchema):
