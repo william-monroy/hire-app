@@ -1,5 +1,5 @@
 #!/bin/sh
-'''exec' "/mnt/c/Users/Andrés Fuentes/Documents/Escuela/Denso/hire-app/backend/venv/bin/python3" "$0" "$@"
+'''exec' "/mnt/c/Users/Andrés Fuentes/Documents/GitHub/hire-app/backend/venv/bin/python" "$0" "$@"
 ' '''
 # -*- coding: utf-8 -*-
 import re
