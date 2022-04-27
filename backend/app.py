@@ -10,7 +10,7 @@ app = Flask(__name__)
 CORS(app)
 
 # pymysql error: https://stackoverflow.com/questions/22252397/importerror-no-module-named-mysqldb
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:@localhost/densodb"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:admin@34.123.4.134:3306/densodb"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -251,8 +251,7 @@ def index_login():
             except IndexError:
                 return jsonify({"Message": "Invalid Credentials"}), 401
 
-if __name__ == '__main__':
-    app.run(debug=True, port=os.getenv("PORT", default=5000))
+
 
 @app.route("/api/route/signup", methods=["POST"])
 def index_signup():
@@ -401,3 +400,6 @@ def index_score():
         return "Exito", 201
     except:
         return jsonify({"Message": "Error"}), 400
+
+if __name__ == '__main__':
+    app.run(debug=True, port=os.getenv("PORT", default=5000))
