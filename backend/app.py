@@ -1,10 +1,10 @@
-from crypt import methods
 from unittest import TextTestRunner
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 import datetime
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -247,3 +247,6 @@ def index_auth():
                 return "Error", 204
             except IndexError:
                 return jsonify({"Message": "Invalid Credentials"}), 401
+
+if __name__ == '__main__':
+    app.run(debug=True, port=os.getenv("PORT", default=5000))
