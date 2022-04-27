@@ -1,3 +1,4 @@
+from crypt import methods
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
@@ -357,6 +358,19 @@ def index_administrator_sing():
         }), 201
     except:
         return jsonify({"Message": "Error"}), 400
+
+# @app.route("api/get/results", methods=["POST"])
+# def index_results():
+#     id_candidate = request.json["id"]
+#     id_candidate = db.session.execute("SELECT id FROM candidate WHERE id = " + str(id_candidate) + "").fetchall()
+
+#     if len(id_candidate) == 0:
+#         return jsonify({"Message": "Error"}), 400
+    
+#     id_candidate = str(id_candidate[0][0])
+
+    
+
 
 @app.route("/api/game/scores", methods=["POST"])
 def index_score():
