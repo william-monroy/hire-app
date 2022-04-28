@@ -10,9 +10,9 @@ CORS(app)
 
 # pymysql error: https://stackoverflow.com/questions/22252397/importerror-no-module-named-mysqldb
 # Servidor Remoto
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:admin@34.123.4.134:3306/densodb"
+# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:admin@34.123.4.134:3306/densodb"
 # Servidor Local
-# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:@localhost/densodb"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:@localhost/densodb"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -262,7 +262,8 @@ def index_signup():
         email = request.json["email"]
         phone = request.json["phone"]
         password = request.json["password"]
-        # birthday
+        # YYYY-MM-DD
+        birthday = request.json["birthday"]
 
         ids = db.session.execute("SELECT id FROM candidate").fetchall()
 
@@ -276,7 +277,7 @@ def index_signup():
             id = max_id+1,
             fname = f_name,
             lname = l_name,
-            age = "2000-01-01",
+            age = birthday,
             email = email,
             phoneNumber = phone,
             passwordHash = password,
@@ -308,8 +309,15 @@ def index_canidate_sing():
         lname = lname[0][0]
         phone_number = db.session.execute("SELECT phoneNumber FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
         phone_number = phone_number[0][0]
+        # birthday formateado
         birthday = db.session.execute("SELECT age FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-        birthday = birthday[0][0]
+        birthday_day = str(birthday[0][0].day)
+        if int(birthday_day) <= 9:
+            birthday_day = "0" + str(birthday_day)
+        birthday_month = str(birthday[0][0].month)
+        if int(birthday_month) <= 9:
+            birthday_month = "0" + str(birthday_month)
+        birthday = birthday_day + "/" + birthday_month + "/" + str(birthday[0][0].year)
         password = db.session.execute("SELECT passwordHash FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
         password = password[0][0]
         id_admin = db.session.execute("SELECT idAdministrator FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
@@ -346,8 +354,15 @@ def index_administrator_sing():
         lname = lname[0][0]
         phone_number = db.session.execute("SELECT phoneNumber FROM administrator WHERE id = '" + id_administrator + "'").fetchall()
         phone_number = phone_number[0][0]
+        # Birthday formateado
         birthday = db.session.execute("SELECT age FROM administrator WHERE id = '" + id_administrator + "'").fetchall()
-        birthday = birthday[0][0]
+        birthday_day = str(birthday[0][0].day)
+        if int(birthday_day) <= 9:
+            birthday_day = "0" + str(birthday_day)
+        birthday_month = str(birthday[0][0].month)
+        if int(birthday_month) <= 9:
+            birthday_month = "0" + str(birthday_month)
+        birthday = birthday_day + "/" + birthday_month + "/" + str(birthday[0][0].year)
         password = db.session.execute("SELECT passwordHash FROM administrator WHERE id = '" + id_administrator + "'").fetchall()
         password = password[0][0]
 
@@ -398,7 +413,13 @@ def index_results():
     phone_number = db.session.execute("SELECT phoneNumber FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
     phone_number = phone_number[0][0]
     birthday = db.session.execute("SELECT age FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-    birthday = birthday[0][0]
+    birthday_day = str(birthday[0][0].day)
+    if int(birthday_day) <= 9:
+        birthday_day = "0" + str(birthday_day)
+    birthday_month = str(birthday[0][0].month)
+    if int(birthday_month) <= 9:
+        birthday_month = "0" + str(birthday_month)
+    birthday = birthday_day + "/" + birthday_month + "/" + str(birthday[0][0].year)
     password = db.session.execute("SELECT passwordHash FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
     password = password[0][0]
     id_admin = db.session.execute("SELECT idAdministrator FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
