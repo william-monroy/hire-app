@@ -16,6 +16,13 @@ import Link from "next/link";
 import styles from "../styles/SignUp.module.css";
 
 const SignUp = () => {
+  const [fName, setFName] = useState("");
+  const [lName, setLName] = useState("");
+  const [email, setEmail] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [password, setPassword] = useState("");
+  const [birth, setBirth] = useState("");
+
   const { value, reset, bindings } = useInput("");
 
   const validateEmail = (value) => {
@@ -43,6 +50,20 @@ const SignUp = () => {
     setViewLoader(false);
   }, 1500);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const body = { fName, lName, email, telefono, password, birth };
+    const userAPI = await axios.post("/api/auth/signup", body);
+    if (userAPI.status === 200) {
+      router.push("/dashboard/home");
+      console.log(userAPI.data.data);
+      login(userAPI.data.data);
+    } else {
+      console.log("error");
+      setError("Datos incorrectos");
+    }
+  };
+
   return (
     <div className={styles.SignUp}>
       {viewLoader ? <Loading type="points-opacity" size="xl" /> : null}
@@ -67,6 +88,9 @@ const SignUp = () => {
               size="lg"
               placeholder="Nombres"
               helperText="Requerido"
+              onChange={(e) => {
+                setFName(e.target.value);
+              }}
             />
             <Spacer x={2} />
             <Input
@@ -77,6 +101,9 @@ const SignUp = () => {
               size="lg"
               placeholder="Apellidos"
               helperText="Requerido"
+              onChange={(e) => {
+                setLName(e.target.value);
+              }}
             />
           </Row>
           <Spacer y={0.2} />
@@ -93,6 +120,9 @@ const SignUp = () => {
             placeholder="Email"
             bordered
             color="primary"
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
           />
           <Spacer y={0.2} />
           <Input
@@ -103,6 +133,9 @@ const SignUp = () => {
             size="lg"
             placeholder="Teléfono"
             helperText="Requerido"
+            onChange={(e) => {
+              setTelefono(e.target.value);
+            }}
           />
           <Spacer y={0.2} />
           <Row>
@@ -116,6 +149,9 @@ const SignUp = () => {
               helperText="Requerido"
               type={["password"]}
               contentLeft={<Password fill="currentColor" />}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
             />
             <Spacer x={2} />
             <Input
@@ -124,6 +160,9 @@ const SignUp = () => {
               width="186px"
               type="date"
               helperText="Fecha de Nacimiento"
+              onChange={(e) => {
+                setBirth(e.target.value);
+              }}
             />
           </Row>
           <Spacer y={0.5} />
@@ -140,9 +179,9 @@ const SignUp = () => {
               Iniciar Sesión
             </Button>
           </Link>
-          <Link href="/home" style={{ textDecoration: "none" }} passHref>
-            <Button auto>Registrarse</Button>
-          </Link>
+          <Button auto onClick={handleSubmit}>
+            Registrarse
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
