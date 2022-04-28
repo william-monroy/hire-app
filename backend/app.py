@@ -252,8 +252,6 @@ def index_login():
             except IndexError:
                 return jsonify({"Message": "Invalid Credentials"}), 401
 
-
-
 @app.route("/api/route/signup", methods=["POST"])
 def index_signup():
     try: 
@@ -286,6 +284,16 @@ def index_signup():
 
         db.session.add(candidate)
         db.session.commit()
+
+        return jsonify({
+            "id": max_id+1,
+            "fname": f_name, 
+            "lname": l_name,
+            "email": email,
+            "cellphone": phone,
+            "birthday": birthday,
+            "admin": False
+        })
 
         return "Exito", 201
     except:
