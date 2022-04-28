@@ -10,9 +10,9 @@ CORS(app)
 
 # pymysql error: https://stackoverflow.com/questions/22252397/importerror-no-module-named-mysqldb
 # Servidor Remoto
-# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:admin@34.123.4.134:3306/densodb"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:admin@34.123.4.134:3306/densodb"
 # Servidor Local
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:@localhost/densodb"
+#app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:@localhost/densodb"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -254,7 +254,7 @@ def index_login():
 
 
 
-@app.route("/api/route/signup", methods=["POST"])
+@app.route("/api/auth/signup", methods=["POST"])
 def index_signup():
     try: 
         f_name = request.json["f_name"]
