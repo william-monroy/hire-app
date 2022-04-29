@@ -11,9 +11,9 @@ CORS(app)
 
 # pymysql error: https://stackoverflow.com/questions/22252397/importerror-no-module-named-mysqldb
 # Servidor Remoto
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:admin@34.123.4.134:3306/densodb"
+# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:admin@34.123.4.134:3306/densodb"
 # Servidor Local
-# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:@localhost/densodb"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:@localhost/densodb"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -458,8 +458,35 @@ def index_delete():
 
     id_candidate = str(id_candidate[0][0])
 
-
     Candidate.query.filter_by(id=id_candidate).delete()
+
+    db.session.commit()
+
+    return "Exito"
+
+@app.route("/api/change/candidate", methods=["POST"])
+def index_change_candidate():
+    id = request.json["id"]
+    f_name = request.json["f_name"]
+    l_name = request.json["l_name"]
+    email = request.json["email"]
+    phone = request.json["phone"]
+    password = request.json["password"]
+    # YYYY-MM-DD
+    birthday = request.json["birthday"]
+
+    id = db.session.execute("SELECT id FROM candidate WHERE id = " + str(id) + "").fetchall()
+    if len(id) == 0:
+        return jsonify({"Message": "Error"}), 400
+    id = str(id[0][0])
+
+    candidate = Candidate.query.filter_by(id = id).first()
+    candidate.fname = f_name
+    candidate.lname = l_name
+    candidate.age = birthday
+    candidate.email = email
+    candidate.phoneNumber = phone
+    candidate.passwordHash = password
 
     db.session.commit()
 
