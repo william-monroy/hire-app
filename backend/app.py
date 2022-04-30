@@ -1,3 +1,4 @@
+from crypt import methods
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
@@ -10,9 +11,9 @@ CORS(app)
 
 # pymysql error: https://stackoverflow.com/questions/22252397/importerror-no-module-named-mysqldb
 # Servidor Remoto
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:admin@34.123.4.134:3306/densodb"
+# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:admin@34.123.4.134:3306/densodb"
 # Servidor Local
-#app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:@localhost/densodb"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:@localhost/densodb"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -191,7 +192,8 @@ def index_login():
 
         #Revisar si el candidate existe
         try:
-            raw_email = db.session.execute("SELECT email FROM candidate WHERE email = '" + email + "'").fetchall()
+            # raw_email = db.session.execute("SELECT email FROM candidate WHERE email = '" + email + "").fetchall()
+            raw_email = db.session.execute("SELECT email FROM candidate WHERE email = '%s'").fetchall()
             raw_email = raw_email[0][0]
             if raw_email == email:
                 raw_password = db.session.execute("SELECT passwordHash FROM candidate WHERE passwordHash = '" + password + "'").fetchall()
@@ -294,8 +296,6 @@ def index_signup():
             "birthday": birthday,
             "admin": False
         })
-
-        return "Exito", 201
     except:
         return jsonify({"Message": "Error"}), 400
 
@@ -326,6 +326,7 @@ def index_canidate_sing():
         if int(birthday_month) <= 9:
             birthday_month = "0" + str(birthday_month)
         birthday = birthday_day + "/" + birthday_month + "/" + str(birthday[0][0].year)
+        # password = db.session.execute("sp_Password()").fetchall()
         password = db.session.execute("SELECT passwordHash FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
         password = password[0][0]
         id_admin = db.session.execute("SELECT idAdministrator FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
@@ -447,7 +448,50 @@ def index_results():
         "test3": test3
     })
 
+@app.route("/api/delete/candidate", methods=["POST"])
+def index_delete():
+    id_candidate = request.json["id"]
+    id_candidate = db.session.execute("SELECT id FROM candidate WHERE id = " + str(id_candidate) + "").fetchall()
     
+    if len(id_candidate) == 0:
+        return jsonify({"Message": "Error"}), 400
+
+    id_candidate = str(id_candidate[0][0])
+
+    Candidate.query.filter_by(id=id_candidate).delete()
+
+    db.session.commit()
+
+    return "Exito"
+
+@app.route("/api/change/candidate", methods=["POST"])
+def index_change_candidate():
+    id = request.json["id"]
+    f_name = request.json["f_name"]
+    l_name = request.json["l_name"]
+    email = request.json["email"]
+    phone = request.json["phone"]
+    password = request.json["password"]
+    # YYYY-MM-DD
+    birthday = request.json["birthday"]
+
+    id = db.session.execute("SELECT id FROM candidate WHERE id = " + str(id) + "").fetchall()
+    if len(id) == 0:
+        return jsonify({"Message": "Error"}), 400
+    id = str(id[0][0])
+
+    candidate = Candidate.query.filter_by(id = id).first()
+    candidate.fname = f_name
+    candidate.lname = l_name
+    candidate.age = birthday
+    candidate.email = email
+    candidate.phoneNumber = phone
+    candidate.passwordHash = password
+
+    db.session.commit()
+
+    return "Exito"
+
 @app.route("/api/game/scores", methods=["POST"])
 def index_score():
     try:
