@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Modal,
   Input,
@@ -14,6 +14,9 @@ import { Mail } from "../components/Mail";
 import { Password } from "../components/Password";
 import Link from "next/link";
 import styles from "../styles/SignUp.module.css";
+import axios from "axios";
+import { useRouter } from "next/router";
+import AuthContext from "../context/authContext";
 
 const SignUp = () => {
   const [fName, setFName] = useState("");
@@ -24,6 +27,7 @@ const SignUp = () => {
   const [birth, setBirth] = useState("");
 
   const { value, reset, bindings } = useInput("");
+  const { user, login, logout } = useContext(AuthContext);
 
   const validateEmail = (value) => {
     return value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
@@ -49,6 +53,8 @@ const SignUp = () => {
     setVisible(true);
     setViewLoader(false);
   }, 1500);
+
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -108,22 +114,17 @@ const SignUp = () => {
           </Row>
           <Spacer y={0.2} />
           <Input
-            {...bindings}
-            clearable
-            shadow={false}
-            onClearClick={reset}
-            status={helper.color}
-            color={helper.color}
-            helperColor={helper.color}
-            helperText={helper.text}
-            type="email"
-            placeholder="Email"
-            bordered
-            color="primary"
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-          />
+              clearable
+              bordered
+              fullWidth
+              color="primary"
+              size="lg"
+              placeholder="Email"
+              helperText="Requerido"
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+            />
           <Spacer y={0.2} />
           <Input
             clearable
