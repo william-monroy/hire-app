@@ -192,7 +192,7 @@ def index_login():
 
         #Revisar si el candidate existe
         try:
-            raw_email = db.session.execute("SELECT email FROM candidate WHERE email = '" + email + "").fetchall()
+            raw_email = db.session.execute("SELECT email FROM candidate WHERE email = '" + email + "'").fetchall()
             # raw_email = db.session.execute("SELECT email FROM candidate WHERE email = '%s'").fetchall()
             raw_email = raw_email[0][0]
             if raw_email == email:

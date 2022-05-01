@@ -25,6 +25,7 @@ import styles from "../../styles/Applicants.module.css";
 import AuthContext from "../../context/authContext";
 import positions from "../../data/Positions";
 import { getCandidates } from "../../utils/getCandidates";
+import Link from 'next/link'
 
 const Applicants = () => {
   const { applicants } = useContext(AuthContext);
@@ -32,49 +33,10 @@ const Applicants = () => {
 
   const API_KEY = process.env.SECRET;
 
-  // const getAge = (birthDate) =>
-  //   Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e10);
-  // const status = ["pendiente", "admitido", "rechazado"];
-
-  // useEffect(() => {
-  //   const getResponse = async () => {
-  //     const candidates = await axios
-  //       .get("/api/get/applicants")
-  //       .then((res) => {
-  //         setApplicants(res.data.data.data);
-  //         const users = [];
-  //         for (let i = 0; i < applicants.length; i++) {
-  //           let idPos = Math.floor(Math.random() * positions.length);
-  //           let rating = Math.floor(Math.random() * 5);
-  //           users.push({
-  //             id: applicants[i].id,
-  //             name: applicants[i].fname + " " + applicants[i].lname,
-  //             role: positions[idPos].name,
-  //             team: positions[idPos].category,
-  //             status:
-  //               rating == 0
-  //                 ? status[0]
-  //                 : status[Math.floor(Math.random() * 1) + 1],
-  //             age: getAge(applicants[i].age),
-  //             avatar: `https://i.pravatar.cc/150?u=${applicants[i].email}`,
-  //             email: applicants[i].email,
-  //             rating: rating,
-  //             phone: applicants[i].phoneNumber,
-  //           });
-  //         }
-
-  //         setApplicants(users);
-  //         console.log(applicants);
-  //       })
-  //       .catch((err) => console.log(err));
-  //   };
-  //   getResponse();
-  // }, []);
-
   const columns = [
-    { name: "NOMBRE COMPLETO", uid: "name" },
+    { name: "CANDIDATO", uid: "name" },
     { name: "PUNTUACIÓN", uid: "rating" },
-    { name: "ROL", uid: "role" },
+    { name: "PUESTO", uid: "role" },
     { name: "ESTADO", uid: "status" },
     { name: "ACCIONES", uid: "actions" },
   ];
@@ -111,16 +73,18 @@ const Applicants = () => {
         return (
           <Row justify="center" align="center">
             <Col css={{ d: "flex" }}>
-              <Tooltip content="Details">
-                <IconButton
-                  onClick={() => console.log("View user", applicants.id)}
-                >
-                  <EyeIcon size={20} fill="#979797" />
-                </IconButton>
+              <Tooltip content="Ver Solicitud">
+                <Link href={`/dashboard/application/${applicants.id}`} >
+                  <IconButton
+                    onClick={() => console.log("View user", applicants.id)}
+                  >
+                    <EyeIcon size={20} fill="#979797" />
+                  </IconButton>
+                </Link>
               </Tooltip>
             </Col>
             <Col css={{ d: "flex" }}>
-              <Tooltip content="Edit user">
+              <Tooltip content="Editar Estado">
                 <IconButton
                   onClick={() => console.log("Edit user", applicants.id)}
                 >
@@ -130,7 +94,7 @@ const Applicants = () => {
             </Col>
             <Col css={{ d: "flex" }}>
               <Tooltip
-                content="Delete user"
+                content="Eliminar Solicitud"
                 color="error"
                 onClick={() => console.log("Delete user", applicants.id)}
               >

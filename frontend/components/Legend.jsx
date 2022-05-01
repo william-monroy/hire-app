@@ -18,7 +18,7 @@ const Legend = ({ color, label, num }) => {
           {label}:
         </Text>
         <Spacer x={0.2} />
-        <Text h1 size={16}>
+        <Text h1 size={16} css={{}}>
           {num}
         </Text>
       </Row>
