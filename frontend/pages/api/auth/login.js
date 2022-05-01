@@ -42,7 +42,7 @@ export default async function (req, res) {
       usuario = data.data;
       //console.log(usuario);
     })
-    .then(function (data) {
+    .then(async function (data) {
       const birth = parseDate(usuario.birthday);
       if (usuario.admin) {
         const token = sign(

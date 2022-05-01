@@ -10,7 +10,8 @@ import {
   Tooltip,
   User,
 } from "@nextui-org/react";
-import React from "react";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 import Content from "../../components/Content";
 import { DeleteIcon } from "../../components/DeleteIcon";
 import { EditIcon } from "../../components/EditIcon";
@@ -21,8 +22,55 @@ import Sidebar from "../../components/Sidebar";
 import Star from "../../components/Star";
 import { StyledBadge } from "../../components/StyledBadge";
 import styles from "../../styles/Applicants.module.css";
+import AuthContext from "../../context/authContext";
+import positions from "../../data/Positions";
+import { getCandidates } from "../../utils/getCandidates";
 
 const Applicants = () => {
+  const { applicants } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+
+  const API_KEY = process.env.SECRET;
+
+  // const getAge = (birthDate) =>
+  //   Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e10);
+  // const status = ["pendiente", "admitido", "rechazado"];
+
+  // useEffect(() => {
+  //   const getResponse = async () => {
+  //     const candidates = await axios
+  //       .get("/api/get/applicants")
+  //       .then((res) => {
+  //         setApplicants(res.data.data.data);
+  //         const users = [];
+  //         for (let i = 0; i < applicants.length; i++) {
+  //           let idPos = Math.floor(Math.random() * positions.length);
+  //           let rating = Math.floor(Math.random() * 5);
+  //           users.push({
+  //             id: applicants[i].id,
+  //             name: applicants[i].fname + " " + applicants[i].lname,
+  //             role: positions[idPos].name,
+  //             team: positions[idPos].category,
+  //             status:
+  //               rating == 0
+  //                 ? status[0]
+  //                 : status[Math.floor(Math.random() * 1) + 1],
+  //             age: getAge(applicants[i].age),
+  //             avatar: `https://i.pravatar.cc/150?u=${applicants[i].email}`,
+  //             email: applicants[i].email,
+  //             rating: rating,
+  //             phone: applicants[i].phoneNumber,
+  //           });
+  //         }
+
+  //         setApplicants(users);
+  //         console.log(applicants);
+  //       })
+  //       .catch((err) => console.log(err));
+  //   };
+  //   getResponse();
+  // }, []);
+
   const columns = [
     { name: "NOMBRE COMPLETO", uid: "name" },
     { name: "PUNTUACIÓN", uid: "rating" },
@@ -30,85 +78,18 @@ const Applicants = () => {
     { name: "ESTADO", uid: "status" },
     { name: "ACCIONES", uid: "actions" },
   ];
-  const users = [
-    {
-      id: 1,
-      name: "Tony Reichert",
-      role: "CEO",
-      team: "Management",
-      status: "active",
-      age: "29",
-      avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-      email: "tony.reichert@example.com",
-      rating: 4,
-    },
-    {
-      id: 2,
-      name: "Zoey Lang",
-      role: "Technical Lead",
-      team: "Development",
-      status: "paused",
-      age: "25",
-      avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
-      email: "zoey.lang@example.com",
-      rating: 0,
-    },
-    {
-      id: 3,
-      name: "Jane Fisher",
-      role: "Senior Developer",
-      team: "Development",
-      status: "active",
-      age: "22",
-      avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-      email: "jane.fisher@example.com",
-      rating: 4.5,
-    },
-    {
-      id: 4,
-      name: "William Howard",
-      role: "Community Manager",
-      team: "Marketing",
-      status: "vacation",
-      age: "28",
-      avatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
-      email: "william.howard@example.com",
-      rating: 4.8,
-    },
-    {
-      id: 5,
-      name: "Kristen Copper",
-      role: "Sales Manager",
-      team: "Sales",
-      status: "active",
-      age: "24",
-      avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-      email: "kristen.cooper@example.com",
-      rating: 3.9,
-    },
-    {
-      id: 6,
-      name: "Lori Fisher",
-      role: "Senior Developer",
-      team: "Development",
-      status: "active",
-      age: "29",
-      avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
-      email: "example@example.com",
-      rating: 4.5,
-    },
-  ];
-  const renderCell = (user, columnKey) => {
-    const cellValue = user[columnKey];
+
+  const renderCell = (applicants, columnKey) => {
+    const cellValue = applicants[columnKey];
     switch (columnKey) {
       case "name":
         return (
-          <User squared src={user.avatar} name={cellValue} css={{ p: 0 }}>
-            {user.email}
+          <User squared src={applicants.avatar} name={cellValue} css={{ p: 0 }}>
+            {applicants.email}
           </User>
         );
       case "rating":
-        return <Star rating={user.rating} size={18} />;
+        return <Star rating={applicants.rating} size={18} />;
       case "role":
         return (
           <Col>
@@ -119,26 +100,30 @@ const Applicants = () => {
             </Row>
             <Row>
               <Text b size={13} css={{ tt: "capitalize", color: "$accents3" }}>
-                {user.team}
+                {applicants.team}
               </Text>
             </Row>
           </Col>
         );
       case "status":
-        return <StyledBadge type={user.status}>{cellValue}</StyledBadge>;
+        return <StyledBadge type={applicants.status}>{cellValue}</StyledBadge>;
       case "actions":
         return (
           <Row justify="center" align="center">
             <Col css={{ d: "flex" }}>
               <Tooltip content="Details">
-                <IconButton onClick={() => console.log("View user", user.id)}>
+                <IconButton
+                  onClick={() => console.log("View user", applicants.id)}
+                >
                   <EyeIcon size={20} fill="#979797" />
                 </IconButton>
               </Tooltip>
             </Col>
             <Col css={{ d: "flex" }}>
               <Tooltip content="Edit user">
-                <IconButton onClick={() => console.log("Edit user", user.id)}>
+                <IconButton
+                  onClick={() => console.log("Edit user", applicants.id)}
+                >
                   <EditIcon size={20} fill="#979797" />
                 </IconButton>
               </Tooltip>
@@ -147,7 +132,7 @@ const Applicants = () => {
               <Tooltip
                 content="Delete user"
                 color="error"
-                onClick={() => console.log("Delete user", user.id)}
+                onClick={() => console.log("Delete user", applicants.id)}
               >
                 <IconButton>
                   <DeleteIcon size={20} fill="#FF0080" />
@@ -165,71 +150,77 @@ const Applicants = () => {
       <Navbar />
       <Sidebar current={4} />
       <Content>
-        <Row>
-          <Grid.Container
-            justify="space-around"
-            alignItems="center"
-            direction="row"
-          >
-            <Grid xs={12} md={8} alignItems="center">
-              <Text h1 size={26}>
-                Total de Postulaciones: {5}
-              </Text>
-            </Grid>
-            <Grid xs={12} md={4} alignItems="center">
-              <Input
-                clearable
-                bordered
-                color="primary"
-                placeholder="Buscar Aplicantes"
-                size="lg"
-                fullWidth={true}
-                contentRight={<Loading size="xs" />}
-              />
-            </Grid>
-          </Grid.Container>
-        </Row>
-        <Spacer />
-        <Grid.Container xs={12} md={12} alignItems="center">
-          <Grid justify="center" wrap="wrap">
-            <Table
-              aria-label="Example table with custom cells"
-              css={{
-                height: "auto",
-                minWidth: "100%",
-              }}
-              selectionMode="none"
-            >
-              <Table.Header columns={columns}>
-                {(column) => (
-                  <Table.Column
-                    key={column.uid}
-                    hideHeader={column.uid === "actions"}
-                    align={column.uid === "actions" ? "center" : "start"}
-                  >
-                    {column.name}
-                  </Table.Column>
-                )}
-              </Table.Header>
-              <Table.Body items={users}>
-                {(item) => (
-                  <Table.Row>
-                    {(columnKey) => (
-                      <Table.Cell>{renderCell(item, columnKey)}</Table.Cell>
+        {!(applicants.length>0) ? (
+          <Loading />
+        ) : (
+          <>
+            <Row>
+              <Grid.Container
+                justify="space-around"
+                alignItems="center"
+                direction="row"
+              >
+                <Grid xs={12} md={8} alignItems="center">
+                  <Text h1 size={26}>
+                    Total de Postulaciones: {applicants.length}
+                  </Text>
+                </Grid>
+                <Grid xs={12} md={4} alignItems="center">
+                  <Input
+                    clearable
+                    bordered
+                    color="primary"
+                    placeholder="Buscar Aplicantes"
+                    size="lg"
+                    fullWidth={true}
+                    contentRight={<Loading size="xs" />}
+                  />
+                </Grid>
+              </Grid.Container>
+            </Row>
+            <Spacer />
+            <Grid.Container xs={12} md={12} alignItems="center">
+              <Grid justify="center" wrap="wrap">
+                <Table
+                  aria-label="Example table with custom cells"
+                  css={{
+                    height: "auto",
+                    minWidth: "100%",
+                  }}
+                  selectionMode="none"
+                >
+                  <Table.Header columns={columns}>
+                    {(column) => (
+                      <Table.Column
+                        key={column.uid}
+                        hideHeader={column.uid === "actions"}
+                        align={column.uid === "actions" ? "center" : "start"}
+                      >
+                        {column.name}
+                      </Table.Column>
                     )}
-                  </Table.Row>
-                )}
-              </Table.Body>
-              <Table.Pagination
-                shadow
-                noMargin
-                align="center"
-                rowsPerPage={10}
-                onPageChange={(page) => console.log({ page })}
-              />
-            </Table>
-          </Grid>
-        </Grid.Container>
+                  </Table.Header>
+                  <Table.Body items={applicants}>
+                    {(item) => (
+                      <Table.Row>
+                        {(columnKey) => (
+                          <Table.Cell>{renderCell(item, columnKey)}</Table.Cell>
+                        )}
+                      </Table.Row>
+                    )}
+                  </Table.Body>
+                  <Table.Pagination
+                    shadow
+                    noMargin
+                    align="center"
+                    rowsPerPage={10}
+                    onPageChange={(page) => console.log({ page })}
+                  />
+                </Table>
+              </Grid>
+            </Grid.Container>
+          </>
+        )}
       </Content>
     </div>
   );
