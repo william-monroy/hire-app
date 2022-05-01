@@ -42,6 +42,7 @@ const Login = () => {
     if (userAPI.status === 200) {
       let candidates = await getCandidates();
       setApplicants(candidates);
+      console.log(candidates)
       router.push("/dashboard/home");
       console.log(userAPI.data.data);
       login(userAPI.data.data);

@@ -24,7 +24,7 @@ const Navbar = () => {
 
   return (
     <div className={styles.Navbar}>
-      <Popover placement="bottom-right">
+      <Popover placement="bottom">
         <Popover.Trigger>
           <Button auto color="primary" css={{ marginRight: "10px" }}>
             <div className={styles.Navbar__icon}>

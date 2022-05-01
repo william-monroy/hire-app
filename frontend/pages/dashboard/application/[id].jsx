@@ -88,6 +88,7 @@ const Application = ({ id }) => {
     setTimeout(() => {
       setLoading(false);
     }, 500);
+    console.log(applicants);
     if (applicants[id - 1].status != "pendiente") {
       getResults();
     }
