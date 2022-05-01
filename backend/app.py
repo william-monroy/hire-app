@@ -11,9 +11,9 @@ CORS(app)
 
 # pymysql error: https://stackoverflow.com/questions/22252397/importerror-no-module-named-mysqldb
 # Servidor Remoto
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:admin@34.123.4.134:3306/densodb"
+# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:admin@34.123.4.134:3306/densodb"
 # Servidor Local
-#app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:@localhost/densodb"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:@localhost/densodb"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -148,7 +148,7 @@ class Test3Schema(ma.SQLAlchemyAutoSchema):
         model =  Test3
         include_fk = True
 
-# ROUTES
+# ROUTE                                     
 @app.route("/api/get/administrators")
 def index_administrator():
     administradores = Administrator.query.all()
@@ -192,7 +192,7 @@ def index_login():
 
         #Revisar si el candidate existe
         try:
-            raw_email = db.session.execute("SELECT email FROM candidate WHERE email = '" + email + "").fetchall()
+            raw_email = db.session.execute("SELECT email FROM candidate WHERE email = '" + email + "'").fetchall()
             # raw_email = db.session.execute("SELECT email FROM candidate WHERE email = '%s'").fetchall()
             raw_email = raw_email[0][0]
             if raw_email == email:
@@ -387,6 +387,7 @@ def index_administrator_sing():
     except:
         return jsonify({"Message": "Error"}), 400
 
+#TODO: Cambiar de raw SQL a Flask-SQLAlcheamy Queries
 @app.route("/api/get/results", methods=["POST"])
 def index_results():
     id_candidate = request.json["id"]
@@ -448,22 +449,24 @@ def index_results():
         "test3": test3
     })
 
+#TODO: Cambiar de raw SQL a Flask-SQLAlcheamy Queries y borrar test123
 @app.route("/api/delete/candidate", methods=["POST"])
 def index_delete():
     id_candidate = request.json["id"]
-    id_candidate = db.session.execute("SELECT id FROM candidate WHERE id = " + str(id_candidate) + "").fetchall()
     
-    if len(id_candidate) == 0:
-        return jsonify({"Message": "Error"}), 400
-
-    id_candidate = str(id_candidate[0][0])
-
-    Candidate.query.filter_by(id=id_candidate).delete()
-
+    try: 
+        Test1.query.filter_by(idCandidate = id_candidate).delete()
+        Test2.query.filter_by(idCandidate = id_candidate).delete()
+        Test3.query.filter_by(idCandidate = id_candidate).delete()
+        Candidate.query.filter_by(id = id_candidate).delete()
+    except: 
+         return jsonify({"Message": "Error"}), 400
+    
     db.session.commit()
 
-    return "Exito"
+    return "Exito", 200
 
+#CHECK
 @app.route("/api/change/candidate", methods=["POST"])
 def index_change_candidate():
     id = request.json["id"]
@@ -475,22 +478,20 @@ def index_change_candidate():
     # YYYY-MM-DD
     birthday = request.json["birthday"]
 
-    id = db.session.execute("SELECT id FROM candidate WHERE id = " + str(id) + "").fetchall()
-    if len(id) == 0:
-        return jsonify({"Message": "Error"}), 400
-    id = str(id[0][0])
-
     candidate = Candidate.query.filter_by(id = id).first()
-    candidate.fname = f_name
-    candidate.lname = l_name
-    candidate.age = birthday
-    candidate.email = email
-    candidate.phoneNumber = phone
-    candidate.passwordHash = password
+    try: 
+        candidate.fname = f_name
+        candidate.lname = l_name
+        candidate.age = birthday
+        candidate.email = email
+        candidate.phoneNumber = phone
+        candidate.passwordHash = password
+    except AttributeError:
+        return jsonify({"Message": "Error"}), 400
 
     db.session.commit()
 
-    return "Exito"
+    return "Exito", 200
 
 @app.route("/api/game/scores", methods=["POST"])
 def index_score():
