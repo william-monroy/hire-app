@@ -11,9 +11,9 @@ CORS(app)
 
 # pymysql error: https://stackoverflow.com/questions/22252397/importerror-no-module-named-mysqldb
 # Servidor Remoto
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:admin@34.123.4.134:3306/densodb"
+# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:admin@34.123.4.134:3306/densodb"
 # Servidor Local
-#app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:@localhost/densodb"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:@localhost/densodb"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -148,7 +148,7 @@ class Test3Schema(ma.SQLAlchemyAutoSchema):
         model =  Test3
         include_fk = True
 
-# ROUTES
+# ROUTE                                     
 @app.route("/api/get/administrators")
 def index_administrator():
     administradores = Administrator.query.all()
@@ -304,43 +304,17 @@ def index_canidate_sing():
     try:
         id_candidate = request.json["id"]
 
-        id_candidate = db.session.execute("SELECT id FROM candidate WHERE id = " + str(id_candidate) + "").fetchall()
-
-        if len(id_candidate) == 0:
-            return jsonify({"Message": "Error"}), 400
-        
-        id_candidate = str(id_candidate[0][0])
-
-        fname = db.session.execute("SELECT fname FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-        fname = fname[0][0]
-        lname = db.session.execute("SELECT lname FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-        lname = lname[0][0]
-        phone_number = db.session.execute("SELECT phoneNumber FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-        phone_number = phone_number[0][0]
-        # birthday formateado
-        birthday = db.session.execute("SELECT age FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-        birthday_day = str(birthday[0][0].day)
-        if int(birthday_day) <= 9:
-            birthday_day = "0" + str(birthday_day)
-        birthday_month = str(birthday[0][0].month)
-        if int(birthday_month) <= 9:
-            birthday_month = "0" + str(birthday_month)
-        birthday = birthday_day + "/" + birthday_month + "/" + str(birthday[0][0].year)
-        # password = db.session.execute("sp_Password()").fetchall()
-        password = db.session.execute("SELECT passwordHash FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-        password = password[0][0]
-        id_admin = db.session.execute("SELECT idAdministrator FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-        id_admin = id_admin[0][0]
+        candidate = Candidate.query.filter_by(id = id_candidate).first()
 
         return jsonify({
             "id": id_candidate,
-            "fname": fname,
-            "lname": lname, 
-            "phone": phone_number,
-            "birthday": birthday,
-            "password": password,
+            "fname": candidate.fname,
+            "lname": candidate.lname, 
+            "phone": candidate.phoneNumber,
+            "birthday": str(candidate.age.day) + "/" + str(candidate.age.month) + "/" + str(candidate.age.year),
+            "password": candidate.passwordHash,
             "admin": False,
-            "idAdmin": id_admin
+            "idAdmin": candidate.idAdministrator
         }), 201
     except:
         return jsonify({"Message": "Error"}), 400
@@ -350,43 +324,21 @@ def index_administrator_sing():
     try:
         id_administrator = request.json["id"]
 
-        id_administrator = db.session.execute("SELECT id FROM administrator WHERE id = " + str(id_administrator) + "").fetchall()
-
-        if len(id_administrator) == 0:
-            return jsonify({"Message": "Error"}), 400
-        
-        id_administrator = str(id_administrator[0][0])
-
-        fname = db.session.execute("SELECT fname FROM administrator WHERE id = '" + id_administrator + "'").fetchall()
-        fname = fname[0][0]
-        lname = db.session.execute("SELECT lname FROM administrator WHERE id = '" + id_administrator + "'").fetchall()
-        lname = lname[0][0]
-        phone_number = db.session.execute("SELECT phoneNumber FROM administrator WHERE id = '" + id_administrator + "'").fetchall()
-        phone_number = phone_number[0][0]
-        # Birthday formateado
-        birthday = db.session.execute("SELECT age FROM administrator WHERE id = '" + id_administrator + "'").fetchall()
-        birthday_day = str(birthday[0][0].day)
-        if int(birthday_day) <= 9:
-            birthday_day = "0" + str(birthday_day)
-        birthday_month = str(birthday[0][0].month)
-        if int(birthday_month) <= 9:
-            birthday_month = "0" + str(birthday_month)
-        birthday = birthday_day + "/" + birthday_month + "/" + str(birthday[0][0].year)
-        password = db.session.execute("SELECT passwordHash FROM administrator WHERE id = '" + id_administrator + "'").fetchall()
-        password = password[0][0]
+        administrator = Administrator.query.filter_by(id = id_administrator).first()
 
         return jsonify({
             "id": id_administrator,
-            "fname": fname,
-            "lname": lname, 
-            "phone": phone_number,
-            "birthday": birthday,
-            "password": password,
+            "fname": administrator.fname,
+            "lname": administrator.lname, 
+            "phone": administrator.phoneNumber,
+            "birthday": str(administrator.age.day) + "/" + str(administrator.age.month) + "/" + str(administrator.age.year),
+            "password": administrator.passwordHash,
             "admin": True
         }), 201
     except:
         return jsonify({"Message": "Error"}), 400
 
+#TODO: Cambiar de raw SQL a Flask-SQLAlcheamy Queries
 @app.route("/api/get/results", methods=["POST"])
 def index_results():
     id_candidate = request.json["id"]
@@ -448,22 +400,24 @@ def index_results():
         "test3": test3
     })
 
+#TODO: Cambiar de raw SQL a Flask-SQLAlcheamy Queries y borrar test123
 @app.route("/api/delete/candidate", methods=["POST"])
 def index_delete():
     id_candidate = request.json["id"]
-    id_candidate = db.session.execute("SELECT id FROM candidate WHERE id = " + str(id_candidate) + "").fetchall()
     
-    if len(id_candidate) == 0:
-        return jsonify({"Message": "Error"}), 400
-
-    id_candidate = str(id_candidate[0][0])
-
-    Candidate.query.filter_by(id=id_candidate).delete()
-
+    try: 
+        Test1.query.filter_by(idCandidate = id_candidate).delete()
+        Test2.query.filter_by(idCandidate = id_candidate).delete()
+        Test3.query.filter_by(idCandidate = id_candidate).delete()
+        Candidate.query.filter_by(id = id_candidate).delete()
+    except: 
+         return jsonify({"Message": "Error"}), 400
+    
     db.session.commit()
 
-    return "Exito"
+    return "Exito", 200
 
+#CHECK
 @app.route("/api/change/candidate", methods=["POST"])
 def index_change_candidate():
     id = request.json["id"]
@@ -475,22 +429,20 @@ def index_change_candidate():
     # YYYY-MM-DD
     birthday = request.json["birthday"]
 
-    id = db.session.execute("SELECT id FROM candidate WHERE id = " + str(id) + "").fetchall()
-    if len(id) == 0:
-        return jsonify({"Message": "Error"}), 400
-    id = str(id[0][0])
-
     candidate = Candidate.query.filter_by(id = id).first()
-    candidate.fname = f_name
-    candidate.lname = l_name
-    candidate.age = birthday
-    candidate.email = email
-    candidate.phoneNumber = phone
-    candidate.passwordHash = password
+    try: 
+        candidate.fname = f_name
+        candidate.lname = l_name
+        candidate.age = birthday
+        candidate.email = email
+        candidate.phoneNumber = phone
+        candidate.passwordHash = password
+    except AttributeError:
+        return jsonify({"Message": "Error"}), 400
 
     db.session.commit()
 
-    return "Exito"
+    return "Exito", 200
 
 @app.route("/api/game/scores", methods=["POST"])
 def index_score():
