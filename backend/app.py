@@ -1,4 +1,5 @@
 #from crypt import methods
+from inspect import Attribute
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
@@ -341,64 +342,45 @@ def index_administrator_sing():
 #TODO: Cambiar de raw SQL a Flask-SQLAlcheamy Queries
 @app.route("/api/get/results", methods=["POST"])
 def index_results():
-    id_candidate = request.json["id"]
-    id_candidate = db.session.execute("SELECT id FROM candidate WHERE id = " + str(id_candidate) + "").fetchall()
+    try: 
+        id_candidate = request.json["id"]
 
-    if len(id_candidate) == 0:
+        candidate = Candidate.query.filter_by(id = id_candidate).first()
+
+        test1 = db.session.execute("SELECT ((SUM(test1.answer1 + test1.answer2 + test1.answer3 + test1.answer4 + test1.answer5 + test1.answer6)*100)/6) As ResultadoTest1 FROM candidate JOIN test1 ON candidate.id = test1.idCandidate WHERE candidate.id = " + str(id_candidate) + "").fetchall()
+        try:
+            test1 = round(float(test1[0][0]),2)
+        except TypeError:
+            test1 = None
+
+        test2 = db.session.execute("SELECT ((SUM(test2.answer2 + test2.answer2 + test2.answer3 + test2.answer4 + test2.answer5)*100)/5) As ResultadoTest2 FROM candidate JOIN test2 ON candidate.id = test2.idCandidate WHERE candidate.id = " + str(id_candidate) + "").fetchall()
+        try:
+            test2 = round(float(test2[0][0]), 2)
+        except TypeError:
+            test2 = None
+
+        test3 = db.session.execute("SELECT ((SUM(test3.answer3 + test3.answer2 + test3.answer3 + test3.answer4 + test3.answer5 + test3.answer6)*100)/6) As ResultadoTest3 FROM candidate JOIN test3 ON candidate.id = test3.idCandidate WHERE candidate.id = " + str(id_candidate) + "").fetchall()
+        try:
+            test3 = round(float(test3[0][0]), 2)
+        except TypeError:
+            test3 = None
+
+        return jsonify({
+            "id": id_candidate,
+            "fname": candidate.fname,
+            "lname": candidate.lname, 
+            "phone": candidate.phoneNumber,
+            "birthday": str(candidate.age.day) + "/" + str(candidate.age.month) + "/" + str(candidate.age.year),
+            "password": candidate.passwordHash,
+            "admin": False,
+            "idAdmin": candidate.idAdministrator,
+            "test1": test1,
+            "test2": test2,
+            "test3": test3
+        }), 201
+    except AttributeError:
         return jsonify({"Message": "Error"}), 400
-    
-    id_candidate = str(id_candidate[0][0])
 
-    test1 = db.session.execute("SELECT ((SUM(test1.answer1 + test1.answer2 + test1.answer3 + test1.answer4 + test1.answer5 + test1.answer6)*100)/6) As ResultadoTest1 FROM candidate JOIN test1 ON candidate.id = test1.idCandidate WHERE candidate.id = " + id_candidate + "").fetchall()
-    try:
-        test1 = round(float(test1[0][0]),2)
-    except TypeError:
-        test1 = None
-
-    test2 = db.session.execute("SELECT ((SUM(test2.answer2 + test2.answer2 + test2.answer3 + test2.answer4 + test2.answer5)*100)/5) As ResultadoTest2 FROM candidate JOIN test2 ON candidate.id = test2.idCandidate WHERE candidate.id = " + id_candidate + "").fetchall()
-    try:
-        test2 = round(float(test2[0][0]), 2)
-    except TypeError:
-        test2 = None
-
-    test3 = db.session.execute("SELECT ((SUM(test3.answer3 + test3.answer2 + test3.answer3 + test3.answer4 + test3.answer5 + test3.answer6)*100)/6) As ResultadoTest3 FROM candidate JOIN test3 ON candidate.id = test3.idCandidate WHERE candidate.id = " + id_candidate + "").fetchall()
-    try:
-        test3 = round(float(test3[0][0]), 2)
-    except TypeError:
-        test3 = None
-
-    fname = db.session.execute("SELECT fname FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-    fname = fname[0][0]
-    lname = db.session.execute("SELECT lname FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-    lname = lname[0][0]
-    phone_number = db.session.execute("SELECT phoneNumber FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-    phone_number = phone_number[0][0]
-    birthday = db.session.execute("SELECT age FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-    birthday_day = str(birthday[0][0].day)
-    if int(birthday_day) <= 9:
-        birthday_day = "0" + str(birthday_day)
-    birthday_month = str(birthday[0][0].month)
-    if int(birthday_month) <= 9:
-        birthday_month = "0" + str(birthday_month)
-    birthday = birthday_day + "/" + birthday_month + "/" + str(birthday[0][0].year)
-    password = db.session.execute("SELECT passwordHash FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-    password = password[0][0]
-    id_admin = db.session.execute("SELECT idAdministrator FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-    id_admin = id_admin[0][0]
-
-    return jsonify({
-        "id": id_candidate,
-        "fname": fname,
-        "lname": lname, 
-        "phone": phone_number,
-        "birthday": birthday,
-        "password": password,
-        "admin": False,
-        "idAdmin": id_admin,
-        "test1": test1,
-        "test2": test2,
-        "test3": test3
-    })
 
 #TODO: Cambiar de raw SQL a Flask-SQLAlcheamy Queries y borrar test123
 @app.route("/api/delete/candidate", methods=["POST"])
