@@ -304,43 +304,17 @@ def index_canidate_sing():
     try:
         id_candidate = request.json["id"]
 
-        id_candidate = db.session.execute("SELECT id FROM candidate WHERE id = " + str(id_candidate) + "").fetchall()
-
-        if len(id_candidate) == 0:
-            return jsonify({"Message": "Error"}), 400
-        
-        id_candidate = str(id_candidate[0][0])
-
-        fname = db.session.execute("SELECT fname FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-        fname = fname[0][0]
-        lname = db.session.execute("SELECT lname FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-        lname = lname[0][0]
-        phone_number = db.session.execute("SELECT phoneNumber FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-        phone_number = phone_number[0][0]
-        # birthday formateado
-        birthday = db.session.execute("SELECT age FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-        birthday_day = str(birthday[0][0].day)
-        if int(birthday_day) <= 9:
-            birthday_day = "0" + str(birthday_day)
-        birthday_month = str(birthday[0][0].month)
-        if int(birthday_month) <= 9:
-            birthday_month = "0" + str(birthday_month)
-        birthday = birthday_day + "/" + birthday_month + "/" + str(birthday[0][0].year)
-        # password = db.session.execute("sp_Password()").fetchall()
-        password = db.session.execute("SELECT passwordHash FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-        password = password[0][0]
-        id_admin = db.session.execute("SELECT idAdministrator FROM candidate WHERE id = '" + id_candidate + "'").fetchall()
-        id_admin = id_admin[0][0]
+        candidate = Candidate.query.filter_by(id = id_candidate).first()
 
         return jsonify({
             "id": id_candidate,
-            "fname": fname,
-            "lname": lname, 
-            "phone": phone_number,
-            "birthday": birthday,
-            "password": password,
+            "fname": candidate.fname,
+            "lname": candidate.lname, 
+            "phone": candidate.phoneNumber,
+            "birthday": str(candidate.age.day) + "/" + str(candidate.age.month) + "/" + str(candidate.age.year),
+            "password": candidate.passwordHash,
             "admin": False,
-            "idAdmin": id_admin
+            "idAdmin": candidate.idAdministrator
         }), 201
     except:
         return jsonify({"Message": "Error"}), 400
@@ -350,38 +324,15 @@ def index_administrator_sing():
     try:
         id_administrator = request.json["id"]
 
-        id_administrator = db.session.execute("SELECT id FROM administrator WHERE id = " + str(id_administrator) + "").fetchall()
-
-        if len(id_administrator) == 0:
-            return jsonify({"Message": "Error"}), 400
-        
-        id_administrator = str(id_administrator[0][0])
-
-        fname = db.session.execute("SELECT fname FROM administrator WHERE id = '" + id_administrator + "'").fetchall()
-        fname = fname[0][0]
-        lname = db.session.execute("SELECT lname FROM administrator WHERE id = '" + id_administrator + "'").fetchall()
-        lname = lname[0][0]
-        phone_number = db.session.execute("SELECT phoneNumber FROM administrator WHERE id = '" + id_administrator + "'").fetchall()
-        phone_number = phone_number[0][0]
-        # Birthday formateado
-        birthday = db.session.execute("SELECT age FROM administrator WHERE id = '" + id_administrator + "'").fetchall()
-        birthday_day = str(birthday[0][0].day)
-        if int(birthday_day) <= 9:
-            birthday_day = "0" + str(birthday_day)
-        birthday_month = str(birthday[0][0].month)
-        if int(birthday_month) <= 9:
-            birthday_month = "0" + str(birthday_month)
-        birthday = birthday_day + "/" + birthday_month + "/" + str(birthday[0][0].year)
-        password = db.session.execute("SELECT passwordHash FROM administrator WHERE id = '" + id_administrator + "'").fetchall()
-        password = password[0][0]
+        administrator = Administrator.query.filter_by(id = id_administrator).first()
 
         return jsonify({
             "id": id_administrator,
-            "fname": fname,
-            "lname": lname, 
-            "phone": phone_number,
-            "birthday": birthday,
-            "password": password,
+            "fname": administrator.fname,
+            "lname": administrator.lname, 
+            "phone": administrator.phoneNumber,
+            "birthday": str(administrator.age.day) + "/" + str(administrator.age.month) + "/" + str(administrator.age.year),
+            "password": administrator.passwordHash,
             "admin": True
         }), 201
     except:
