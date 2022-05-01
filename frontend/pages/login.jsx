@@ -17,9 +17,10 @@ import AuthContext from "../context/authContext";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import { getCandidates } from "../utils/getCandidates";
 
 const Login = () => {
-  const { user, login, logout } = useContext(AuthContext);
+  const { user, login, setApplicants } = useContext(AuthContext);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -39,6 +40,8 @@ const Login = () => {
     const credentials = { username, password };
     const userAPI = await axios.post("/api/auth/login", credentials);
     if (userAPI.status === 200) {
+      let candidates = await getCandidates();
+      setApplicants(candidates);
       router.push("/dashboard/home");
       console.log(userAPI.data.data);
       login(userAPI.data.data);

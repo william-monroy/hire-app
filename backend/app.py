@@ -154,35 +154,35 @@ def index_administrator():
     administradores = Administrator.query.all()
     administrador_schema = AdministratorSchema(many=True)
     output = administrador_schema.dump(administradores)
-    return jsonify({"datos": output})
+    return jsonify({"data": output})
 
 @app.route("/api/get/candidates")
 def index_candidate():
     candidates = Candidate.query.all()
     candidate_schema = CandidateSchema(many=True)
     output = candidate_schema.dump(candidates)
-    return jsonify({"datos": output})
+    return jsonify({"data": output})
 
 @app.route("/api/get/test1")
 def index_test1():
     tests1 = Test1.query.all()
     test1_schema = Test1Schema(many=True)
     output = test1_schema.dump(tests1)
-    return jsonify({"datos": output})
+    return jsonify({"data": output})
 
 @app.route("/api/get/test2")
 def index_test2():
     tests2 = Test2.query.all()
     test2_schema = Test2Schema(many=True)
     output = test2_schema.dump(tests2)
-    return jsonify({"datos": output})
+    return jsonify({"data": output})
 
 @app.route("/api/get/test3")
 def index_test3():
     tests3 = Test3.query.all()
     test3_schema = Test3Schema(many=True)
     output = test3_schema.dump(tests3)
-    return jsonify({"datos": output})
+    return jsonify({"data": output})
 
 @app.route("/api/auth/login", methods=["GET", "POST"])
 def index_login():
