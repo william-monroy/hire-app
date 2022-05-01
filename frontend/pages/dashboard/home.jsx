@@ -12,11 +12,15 @@ const Home = () => {
 
   return (
     <div className={styles.Home}>
-      <Navbar />
-      <Sidebar current={0} />
-      <Content>
-        {user.admin ? <HomeAdmin user={user} /> : <HomeUser user={user} />}
-      </Content>
+      {user != null ? (
+        <>
+          <Navbar />
+          <Sidebar current={0} />
+          <Content>
+            {user.admin ? <HomeAdmin user={user} /> : <HomeUser user={user} />}
+          </Content>
+        </>
+      ) : null}
     </div>
   );
 };

@@ -14,30 +14,6 @@
   padding-right: 20px;
 }
 
-.Navbar__icon {
-  color: gray;
-  font-size: 22px;
-  margin-right: 10px;
-  cursor: pointer;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.Navbar__icon::after {
-  content: "";
-  position: absolute;
-  top: 3px;
-  right: 3px;
-  width: 8px;
-  height: 8px;
-  border: 2px solid gray;
-  background-color: red;
-  border-radius: 50%;
-  border-top: 5px solid var(--nextui-colors-headerBackground);
-}
-
 .Navbar__btnSm {
   display: none;
 }

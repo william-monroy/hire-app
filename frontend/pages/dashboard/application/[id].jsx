@@ -110,7 +110,7 @@ const Application = ({ id }) => {
   return (
     <div className={styles.Application}>
       <Navbar />
-      <Sidebar current={4} />
+      <Sidebar current={5} />
       <Content>
         <Row css={{ display: "flex", alignItems: "center" }}>
           <Link href="/dashboard/applicants">
