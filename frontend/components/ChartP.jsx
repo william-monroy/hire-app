@@ -26,7 +26,7 @@ export const options = {
 };
 
 // export const data = {
-//   labels: ['Habilidades de Supervisión', 'Sentido común y tacto en las relaciones interpersonales', 'Capacidad de desición'],
+//   labels: ['Habilidades de Supervisión', 'Sentido común y tacto en las relaciones interpersonales', 'Capacidad de decisión'],
 //   datasets: [
 //     {
 //       label: '# of Votes',

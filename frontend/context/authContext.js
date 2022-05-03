@@ -6,7 +6,16 @@ const AuthContext = createContext({
   user: null,
   login: () => {},
   logout: () => {},
-  applicants: []
+  applicants: [],
+  // currentApplication: [
+  //   {
+  //     id: 1,
+  //     id_applicant: 1,
+  //     id_job: 1,
+  //     status: "pending",
+      
+  //   }
+  // ],
 });
 
 export const AuthContextProvider = ({ children }) => {

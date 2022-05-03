@@ -16,6 +16,7 @@ import {
 } from "react-icons/hi";
 import AuthContext from "../context/authContext";
 import { Text } from "@nextui-org/react";
+// import Image from '/public/assets'
 
 const Sidebar = ({ current = 0 }) => {
   const { user } = useContext(AuthContext);
@@ -26,13 +27,13 @@ const Sidebar = ({ current = 0 }) => {
           <div className={styles.Sidebar__top}>
             <div className={styles.Sidebar__header}>
               <img
-                src="../assets/denso-logo.png"
+                src="/assets/denso-logo.png"
                 alt="Denso logo"
                 width="150px"
                 className={styles.densoLogo}
               />
               <img
-                src="../assets/d-logo.png"
+                src="/assets/d-logo.png"
                 className={styles.dLogo}
                 alt="Denso logo"
               />
