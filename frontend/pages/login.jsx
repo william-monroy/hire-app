@@ -20,7 +20,7 @@ import Head from "next/head";
 import { getCandidates } from "../utils/getCandidates";
 
 const Login = () => {
-  const { user, login, setApplicants } = useContext(AuthContext);
+  const { user, login, setApplicants, jobs } = useContext(AuthContext);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -29,6 +29,8 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const router = useRouter();
+
+  console.log(jobs)
 
   setTimeout(() => {
     setVisible(true);

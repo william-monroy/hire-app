@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   Card,
@@ -14,8 +14,13 @@ import { BsFillCaretUpFill, BsFillCaretDownFill } from "react-icons/bs";
 import { HiOutlineEye, HiOutlineClipboardList } from "react-icons/hi";
 import { ChartH } from "../components/ChartH";
 import styles from "./HomeAdmin.module.css";
+import Link from 'next/link'
 
 const HomeAdmin = ({ user }) => {
+  const [jobs, setJobs] = useState(
+    localStorage.getItem("jobs") ? JSON.parse(localStorage.getItem("jobs")) : []
+  );
+
   return (
     <>
       {user != null ? (
@@ -40,19 +45,23 @@ const HomeAdmin = ({ user }) => {
           <Row justify="space-around" wrap="wrap">
             <PendingCard
               color="primary"
-              number={76}
+              number={0}
               text="Solicitudes por revisar"
             />
-            <PendingCard
-              color="secondary"
-              number={3}
-              text="Agendadas para hoy"
-            />
-            <PendingCard
-              color="warning"
-              number={24}
-              text="Mensajes Recibidos"
-            />
+            <Link href="/dashboard/messages">
+              <PendingCard
+                color="secondary"
+                number={3}
+                text="Agendadas para hoy"
+              />
+            </Link>
+            <Link href="/dashboard/messages">
+              <PendingCard
+                color="warning"
+                number={2}
+                text="Mensajes Recibidos"
+              />
+            </Link>
           </Row>
           <Spacer y={2} />
           <Row justify="space-between" wrap="wrap">
@@ -208,7 +217,7 @@ const HomeAdmin = ({ user }) => {
                   </Row>
                   <Row align="baseline">
                     <Text h1 size={40} margin="0px">
-                      12
+                      {jobs.length}
                     </Text>
                     <Spacer x={0.3} />
                     <Text h2 size={18} margin="0px" color="gray">
