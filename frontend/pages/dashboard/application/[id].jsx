@@ -11,6 +11,7 @@ import {
   Col,
   User,
   Textarea,
+  Modal,
 } from "@nextui-org/react";
 import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
@@ -34,6 +35,24 @@ const Application = ({ id }) => {
   const { applicants } = useContext(AuthContext);
 
   const [loading, setLoading] = useState(true);
+
+  const [visible, setVisible] = useState(false);
+
+  const [estatusOption, setEstatusOption] = useState("revision_pendiente");
+
+  const handleChangeStatus = (e) => {
+    e.preventDefault();
+    applicants[id - 1].status = estatusOption;
+    localStorage.setItem(
+      "notifications-user",
+      JSON.stringify({
+        id: 1,
+        text: "Felicidades, tu solicitud ha sido aprobada",
+      })
+    );
+    setVisible(false);
+  };
+
   let results;
 
   const initialData = {
@@ -84,12 +103,32 @@ const Application = ({ id }) => {
     setData(newData);
   };
 
+  const dataAveraged = {
+    labels: [
+      "Habilidades de Supervisión",
+      "Sentido común y tacto en las relaciones interpersonales",
+      "Capacidad de desición",
+    ],
+    datasets: [
+      {
+        label: "# of Votes",
+        data: [75, 68, 88],
+        backgroundColor: [
+          "rgba(220, 0, 50, 0.5)",
+          "rgba(121, 40, 202, 0.5)",
+          "rgba(245, 166, 35, 0.5)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 500);
     console.log(applicants);
-    if (applicants[id - 1].status != "pendiente") {
+    if (applicants[id - 1].status != "test_pendiente") {
       getResults();
     }
     // getApplicant();
@@ -99,8 +138,10 @@ const Application = ({ id }) => {
     const status = applicants[id - 1].status;
     console.log(status);
     switch (status) {
-      case "pendiente":
-        return 25;
+      case "test_pendiente":
+        return 50;
+      case "revision_pendiente":
+        return 75;
       case "admitido":
         return 100;
       case "rechazado":
@@ -190,11 +231,65 @@ const Application = ({ id }) => {
                     </Row>
                     <Spacer />
                     <Card css={{ width: "100%" }} bordered>
-                      <Row justify="space-between">
+                      <Row
+                        justify="space-between"
+                        css={{ d: "flex", alignItems: "center" }}
+                      >
                         <Text b>Estatus</Text>
-                        <StyledBadge type={applicants[id - 1].status}>
-                          {applicants[id - 1].status}
-                        </StyledBadge>
+                        <Button auto light onClick={() => setVisible(true)}>
+                          <StyledBadge type={applicants[id - 1].status}>
+                            {applicants[id - 1].status}
+                          </StyledBadge>
+                        </Button>
+                        <Modal
+                          blur
+                          aria-labelledby="modal-title"
+                          open={visible}
+                          preventClose
+                        >
+                          <Modal.Header>
+                            <Text h1 size={24}>
+                              Cambiar estatus
+                            </Text>
+                          </Modal.Header>
+                          <Modal.Body css={{ d: "flex", alignItems: "center" }}>
+                            <select
+                              className={styles.select}
+                              onChange={(event) => {
+                                setEstatusOption(event.target.value);
+                                // alert(event.target.value);
+                              }}
+                              value={estatusOption}
+                            >
+                              <option
+                                className={styles.option}
+                                value="revision_pendiente"
+                              >
+                                Revision Pendiente
+                              </option>
+                              <option
+                                className={styles.option}
+                                value="admitido"
+                              >
+                                Admitido
+                              </option>
+                              <option
+                                className={styles.option}
+                                value="rechazado"
+                              >
+                                Rechazado
+                              </option>
+                            </select>
+                          </Modal.Body>
+                          <Modal.Footer>
+                            <Button auto onClick={() => setVisible(false)}>
+                              Cancelar
+                            </Button>
+                            <Button auto onClick={handleChangeStatus}>
+                              Aceptar
+                            </Button>
+                          </Modal.Footer>
+                        </Modal>
                       </Row>
                       <Spacer y={0.5} />
                       <Progress color="primary" value={statusValue()} />
@@ -262,31 +357,61 @@ const Application = ({ id }) => {
                       </div>
                     ) : (
                       <>
-                        <Row justify="center">
+                        <Row justify="space-evenly" xs={12} wrap="wrap">
                           <div className={styles.chart}>
+                            <Text h1 size={20}>
+                              Resultados del Candidato
+                            </Text>
+                            <Spacer />
                             <ChartP data={data} />
+                            <Row justify="center">
+                              <Spacer />
+                              <Legend
+                                color="#dc0032"
+                                label="test1"
+                                num={data.datasets[0].data[0]}
+                              />
+                              <Spacer />
+                              <Legend
+                                color="#7928ca"
+                                label="test2"
+                                num={data.datasets[0].data[1]}
+                              />
+                              <Spacer />
+                              <Legend
+                                color="#f5a623"
+                                label="test3"
+                                num={`${data.datasets[0].data[2]}/100`}
+                              />
+                            </Row>
                           </div>
-                        </Row>
-                        <Spacer />
-                        <Row justify="center">
-                          <Spacer />
-                          <Legend
-                            color="#dc0032"
-                            label="test1"
-                            num={data.datasets[0].data[0]}
-                          />
-                          <Spacer />
-                          <Legend
-                            color="#7928ca"
-                            label="test2"
-                            num={data.datasets[0].data[1]}
-                          />
-                          <Spacer />
-                          <Legend
-                            color="#f5a623"
-                            label="test3"
-                            num={data.datasets[0].data[2]}
-                          />
+                          <div className={styles.chart}>
+                            <Text h1 size={20}>
+                              Resultados Promedio
+                            </Text>
+                            <Spacer />
+                            <ChartP data={dataAveraged} />
+                            <Row justify="center">
+                              <Spacer />
+                              <Legend
+                                color="#dc0032"
+                                label="test1"
+                                num={dataAveraged.datasets[0].data[0]}
+                              />
+                              <Spacer />
+                              <Legend
+                                color="#7928ca"
+                                label="test2"
+                                num={dataAveraged.datasets[0].data[1]}
+                              />
+                              <Spacer />
+                              <Legend
+                                color="#f5a623"
+                                label="test3"
+                                num={dataAveraged.datasets[0].data[2]}
+                              />
+                            </Row>
+                          </div>
                         </Row>
                         <Spacer />
                         <Text h1 size={24}>

@@ -7,7 +7,7 @@ export const getCandidates = async () => {
 
     const getAge = (birthDate) =>
       Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e10);
-    const status = ["pendiente", "admitido", "rechazado"];
+    const status = ["test_pendiente","revision_pendiente", "admitido", "rechazado"];
   
     const res = await axios.get("/api/get/applicants");
     console.log(res.data);
@@ -22,7 +22,7 @@ export const getCandidates = async () => {
         role: positions[idPos].name,
         team: positions[idPos].category,
         status:
-          rating == 0 ? status[0] : status[Math.floor(Math.random() * 2) + 1],
+          rating == 0 ? status[1] : status[Math.floor(Math.random() * 3) + 1],
         age: getAge(cand[i].age),
         avatar: `https://i.pravatar.cc/150?u=${cand[i].email}`,
         email: cand[i].email,

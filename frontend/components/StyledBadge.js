@@ -25,9 +25,13 @@ export const StyledBadge = styled('span', {
         bg: '$errorLight',
         color: '$error'
       },
-      pendiente: {
+      test_pendiente: {
         bg: '$warningLight',
         color: '$warning'
+      },
+      revision_pendiente: {
+        bg: '$secondaryLight',
+        color: '$secondary'
       }
     }
   },

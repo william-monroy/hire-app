@@ -1,3 +1,8 @@
+"""
+Backend utilizando FLASK
+Conexión a base de datos con metodos post y get para el videojuego y aplicación web
+"""
+
 #from crypt import methods
 from inspect import Attribute
 from flask import Flask, jsonify, request
@@ -339,7 +344,6 @@ def index_administrator_sing():
     except:
         return jsonify({"Message": "Error"}), 400
 
-#TODO: Cambiar de raw SQL a Flask-SQLAlcheamy Queries
 @app.route("/api/get/results", methods=["POST"])
 def index_results():
     try: 
@@ -348,18 +352,21 @@ def index_results():
         candidate = Candidate.query.filter_by(id = id_candidate).first()
 
         test1 = db.session.execute("SELECT ((SUM(test1.answer1 + test1.answer2 + test1.answer3 + test1.answer4 + test1.answer5 + test1.answer6)*100)/6) As ResultadoTest1 FROM candidate JOIN test1 ON candidate.id = test1.idCandidate WHERE candidate.id = " + str(id_candidate) + "").fetchall()
+        # test1 = db.session.execute("CALL SP_ConsultaTest1(:param)", {"param":id_candidate}).fetchall()
         try:
             test1 = round(float(test1[0][0]),2)
         except TypeError:
             test1 = None
 
         test2 = db.session.execute("SELECT ((SUM(test2.answer2 + test2.answer2 + test2.answer3 + test2.answer4 + test2.answer5)*100)/5) As ResultadoTest2 FROM candidate JOIN test2 ON candidate.id = test2.idCandidate WHERE candidate.id = " + str(id_candidate) + "").fetchall()
+        # test2 = db.session.execute("CALL SP_ConsultaTest2(:param)", {"param":id_candidate}).fetchall()
         try:
             test2 = round(float(test2[0][0]), 2)
         except TypeError:
             test2 = None
 
         test3 = db.session.execute("SELECT ((SUM(test3.answer3 + test3.answer2 + test3.answer3 + test3.answer4 + test3.answer5 + test3.answer6)*100)/6) As ResultadoTest3 FROM candidate JOIN test3 ON candidate.id = test3.idCandidate WHERE candidate.id = " + str(id_candidate) + "").fetchall()
+        # test3 = db.session.execute("CALL SP_ConsultaTest3(:param)", {"param":id_candidate}).fetchall()
         try:
             test3 = round(float(test3[0][0]), 2)
         except TypeError:
@@ -381,8 +388,6 @@ def index_results():
     except AttributeError:
         return jsonify({"Message": "Error"}), 400
 
-
-#TODO: Cambiar de raw SQL a Flask-SQLAlcheamy Queries y borrar test123
 @app.route("/api/delete/candidate", methods=["POST"])
 def index_delete():
     id_candidate = request.json["id"]
@@ -446,6 +451,31 @@ def index_score():
         )
 
         db.session.add(result_test2)
+
+        result_test1 = Test1(
+            answer1 = 1,
+            answer2 = 1,
+            answer3 = 1,
+            answer4 = 1,
+            answer5 = 1,
+            answer6 = 1,
+            idCandidate = id_candidate
+        )
+
+        db.session.add(result_test1)
+
+        result_test3 = Test3(
+            answer1 = 1,
+            answer2 = 1,
+            answer3 = 1,
+            answer4 = 0,
+            answer5 = 1,
+            answer6 = 1,
+            idCandidate = id_candidate
+        )
+
+        db.session.add(result_test3)
+
         db.session.commit()
 
         return "Exito", 201

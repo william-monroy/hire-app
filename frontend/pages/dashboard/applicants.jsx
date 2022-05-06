@@ -23,7 +23,6 @@ import Star from "../../components/Star";
 import { StyledBadge } from "../../components/StyledBadge";
 import styles from "../../styles/Applicants.module.css";
 import AuthContext from "../../context/authContext";
-import positions from "../../data/Positions";
 import { getCandidates } from "../../utils/getCandidates";
 import Link from 'next/link'
 
@@ -157,7 +156,7 @@ const Applicants = () => {
                     {(column) => (
                       <Table.Column
                         key={column.uid}
-                        hideHeader={column.uid === "actions"}
+                        hideHeader={column.uid === "actions" || column.uid === "rating"}
                         align={column.uid === "actions" ? "center" : "start"}
                       >
                         {column.name}

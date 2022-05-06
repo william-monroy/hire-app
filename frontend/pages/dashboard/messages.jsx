@@ -1,3 +1,4 @@
+import { Loading, Text } from '@nextui-org/react'
 import React from 'react'
 import Content from '../../components/Content'
 import Navbar from '../../components/Navbar'
@@ -10,7 +11,12 @@ const Messages = () => {
       <Navbar />
       <Sidebar current={2}/>
       <Content>
-      Messages
+        <div className={styles.center__center}>
+          <Loading />
+          <Text size={20}>
+            Disponible pronto...
+          </Text>
+        </div>
       </Content>
     </div>
   )
